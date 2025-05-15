@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-APerfectChoice-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Connect Sphere - Welcome</title>
+    <style>
+        /* GLOBAL AAC STYLES (Copy from Main Communication Screen for consistency) */
+        :root {
+            --aac-primary-bg: #FFFFFF;
+            --aac-secondary-bg: #F0F4F8;
+            --aac-border-color: #B0C4DE;
+            --aac-text-color: #1C2C40;
+            --aac-highlight-color: #4A90E2;
+            --aac-highlight-text-color: #FFFFFF;
+            --aac-cell-padding: 15px; /* Slightly more padding for menu buttons */
+            --aac-cell-gap: 15px;
+            --aac-font-family: 'Arial', sans-serif;
+            --aac-button-action-bg: #5CB85C;
+            --aac-button-action-hover-bg: #4CAF50;
+            --aac-button-admin-bg: #F0AD4E; /* Orange for admin/settings */
+            --aac-button-admin-hover-bg: #EC971F;
+            --aac-button-schedule-bg: #5BC0DE; /* Info blue for schedule */
+            --aac-button-schedule-hover-bg: #31B0D5;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: var(--aac-font-family);
+            background-color: var(--aac-secondary-bg);
+            color: var(--aac-text-color);
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tablet-entry-menu-container {
+            width: 100%;
+            max-width: 800px; /* Max width for the menu itself */
+            height: auto;
+            background-color: var(--aac-primary-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .app-logo-entry {
+            width: 100px; /* Adjust size as needed */
+            height: 100px;
+            margin: 0 auto 20px auto;
+            /* background-color: #ddd; /* Placeholder */
+            /* border-radius: 50%; */
+            /* For an actual image: */
+            /* content: url('path/to/connect-sphere-logo.png'); */
+            /* For demo, using text/emoji */
+            font-size: 4em;
+        }
+        .app-logo-entry img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+
+        .welcome-header {
+            font-size: 2.5em;
+            color: var(--aac-text-color);
+            margin-bottom: 10px;
+        }
+
+        .welcome-subheader {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--aac-cell-gap);
+        }
+
+        .menu-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--aac-cell-padding);
+            font-size: 1.5em; /* Larger font for buttons */
+            font-weight: bold;
+            color: var(--aac-highlight-text-color);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            text-align: center;
+            gap: 10px; /* Space between icon and text */
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .menu-button:hover {
+            transform: translateY(-2px);
+        }
+        .menu-button:active {
+            transform: translateY(0px);
+        }
+
+        .menu-button img, .menu-button .icon-placeholder { /* For actual images or emoji placeholders */
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .button-communicate {
+            background-color: var(--aac-button-action-bg);
+        }
+        .button-communicate:hover {
+            background-color: var(--aac-button-action-hover-bg);
+        }
+
+        .button-schedule {
+            background-color: var(--aac-button-schedule-bg);
+        }
+        .button-schedule:hover {
+            background-color: var(--aac-button-schedule-hover-bg);
+        }
+
+        .button-admin {
+            background-color: var(--aac-button-admin-bg);
+        }
+        .button-admin:hover {
+            background-color: var(--aac-button-admin-hover-bg);
+        }
+
+        .entry-footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #777;
+        }
+        .entry-footer button {
+            background: none;
+            border: none;
+            color: var(--aac-highlight-color);
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- This div would be initially visible, others hidden by JS -->
+    <div id="entryMenuScreen" class="tablet-entry-menu-container">
+        <div class="app-logo-entry">
+            <!-- Replace with your actual logo image if you have one -->
+            <!-- <img src="connect-sphere-logo.png" alt="Connect Sphere Logo"> -->
+            <span role="img" aria-label="Connect Sphere Logo Placeholder">🌐</span>
+        </div>
+        <h1 class="welcome-header">Connect Sphere</h1>
+        <p class="welcome-subheader">Your Voice, Your Way!</p>
+
+        <div class="menu-buttons">
+            <button id="goToCommunicationBtn" class="menu-button button-communicate">
+                <!-- <img src="icon-communicate.png" alt=""> -->
+                <span class="icon-placeholder" role="img" aria-label="Communicate">💬</span>
+                Let's Talk!
+            </button>
+            <button id="goToScheduleBtn" class="menu-button button-schedule">
+                <!-- <img src="icon-schedule.png" alt=""> -->
+                <span class="icon-placeholder" role="img" aria-label="Schedule">🗓️</span>
+                My Schedule
+            </button>
+            <button id="goToAdminBtn" class="menu-button button-admin">
+                <!-- <img src="icon-admin.png" alt=""> -->
+                <span class="icon-placeholder" role="img" aria-label="Settings">⚙️</span>
+                Parent/Guardian Settings
+            </button>
+        </div>
+
+        <div class="entry-footer">
+            <p>Version 1.0</p>
+            <!-- Add other footer elements if needed, e.g., help, switch user -->
+            <!-- <button id="switchUserBtn">Switch User</button> -->
+        </div>
+    </div>
+
+    <!-- Other screen containers would go here, initially hidden -->
+    <!-- <div id="mainCommunicationScreen" class="tablet-container-aac" style="display: none;"> ... (Content from previous response) ... </div> -->
+    <!-- <div id="scheduleScreen" class="tablet-container-aac" style="display: none;"> ... (Content for schedule) ... </div> -->
+    <!-- <div id="aiImageStep1Screen" class="tablet-container-aac" style="display: none;"> ... (Content for AI Image Step 1) ... </div> -->
+    <!-- etc. -->
+
+
+    <script>
+        // Basic navigation logic (will be expanded)
+        const entryMenuScreen = document.getElementById('entryMenuScreen');
+        // const mainCommunicationScreen = document.getElementById('mainCommunicationScreen'); // Uncomment when added
+        // const scheduleScreen = document.getElementById('scheduleScreen'); // Uncomment when added
+        // const adminScreen = document.getElementById('aiImageStep1Screen'); // Assuming AI image is part of admin
+
+        const goToCommunicationBtn = document.getElementById('goToCommunicationBtn');
+        const goToScheduleBtn = document.getElementById('goToScheduleBtn');
+        const goToAdminBtn = document.getElementById('goToAdminBtn');
+
+        function showScreen(screenToShow) {
+            // Hide all screens first
+            entryMenuScreen.style.display = 'none';
+            // if (mainCommunicationScreen) mainCommunicationScreen.style.display = 'none'; // Uncomment
+            // if (scheduleScreen) scheduleScreen.style.display = 'none'; // Uncomment
+            // if (adminScreen) adminScreen.style.display = 'none'; // Uncomment
+            // ... hide other screens
+
+            // Show the target screen
+            if (screenToShow) {
+                screenToShow.style.display = screenToShow.classList.contains('tablet-entry-menu-container') ? 'block' : 'flex'; // Entry menu is block, others flex
+            }
+        }
+
+        goToCommunicationBtn.addEventListener('click', () => {
+            window.location.href = "communication.html";
+        });
+
+        goToScheduleBtn.addEventListener('click', () => {
+            window.location.href = "schedule.html";
+        });
+
+        goToAdminBtn.addEventListener('click', () => {
+            window.location.href = "guardian-hub.html";
+        });
+
+        // Initially show the entry menu
+        // showScreen(entryMenuScreen); // This is already visible by default
+
+    </script>
+</body>
+</html>

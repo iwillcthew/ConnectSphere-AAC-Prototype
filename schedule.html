@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-APerfectChoice-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Connect Sphere - My Schedule</title>
+    <style>
+        /* GLOBAL AAC STYLES (Copy from Main Communication/Entry Menu for consistency) */
+        :root {
+            --aac-primary-bg: #FFFFFF;
+            --aac-secondary-bg: #F0F4F8;
+            --aac-border-color: #B0C4DE;
+            --aac-text-color: #1C2C40;
+            --aac-highlight-color: #4A90E2; /* Blue for general highlights */
+            --aac-highlight-text-color: #FFFFFF;
+            --aac-cell-padding: 10px;
+            --aac-cell-gap: 10px;
+            --aac-font-family: 'Arial', sans-serif;
+            --aac-button-action-bg: #5CB85C; /* Green for positive actions */
+            --aac-button-action-hover-bg: #4CAF50;
+            --aac-button-schedule-item-bg: #E0FFFF; /* Light Cyan for schedule items */
+            --aac-button-schedule-item-done-bg: #D3D3D3; /* Light Grey for done items */
+            --aac-button-schedule-item-done-text: #708090; /* Slate Grey for done text */
+            --aac-header-bg: var(--aac-primary-bg); /* Background for the schedule header */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: var(--aac-font-family);
+            background-color: var(--aac-secondary-bg);
+            color: var(--aac-text-color);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .tablet-container-aac { /* Reused from Main Communication Screen */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+            padding: var(--aac-cell-gap);
+        }
+
+        /* SCHEDULE SCREEN HEADER */
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px var(--aac-cell-padding);
+            background-color: var(--aac-header-bg);
+            border-bottom: 2px solid var(--aac-border-color);
+            margin: 0 calc(-1 * var(--aac-cell-gap)) var(--aac-cell-gap) calc(-1 * var(--aac-cell-gap)); /* Extend to edges */
+            padding-left: calc(2 * var(--aac-cell-gap)); /* Adjust padding due to negative margin */
+            padding-right: calc(2 * var(--aac-cell-gap));
+        }
+
+        .schedule-header h1 {
+            font-size: 2em;
+            color: var(--aac-text-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .schedule-header h1 .icon-placeholder { font-size: 1.5em; }
+
+
+        .schedule-nav-buttons button {
+            background-color: var(--aac-highlight-color);
+            color: var(--aac-highlight-text-color);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.2s;
+        }
+        .schedule-nav-buttons button:hover {
+            background-color: #357ABD;
+        }
+        .schedule-nav-buttons button.active-day {
+            background-color: var(--aac-button-action-bg);
+        }
+
+        /* SCHEDULE LIST AREA */
+        .schedule-list-area {
+            flex-grow: 1;
+            overflow-y: auto; /* Allow vertical scrolling for schedule items */
+            padding-right: 5px; /* Space for scrollbar if it appears */
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--aac-button-schedule-item-bg);
+            border: 2px solid var(--aac-border-color);
+            border-radius: 12px;
+            padding: var(--aac-cell-padding);
+            margin-bottom: var(--aac-cell-gap);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        .schedule-item.item-done {
+            background-color: var(--aac-button-schedule-item-done-bg);
+            border-color: #B0B0B0;
+            opacity: 0.7;
+        }
+        .schedule-item.item-done .item-text,
+        .schedule-item.item-done .item-time {
+            text-decoration: line-through;
+            color: var(--aac-button-schedule-item-done-text);
+        }
+
+
+        .item-icon {
+            width: 70px; /* Larger icons for schedule items */
+            height: 70px;
+            object-fit: contain;
+            margin-right: 15px;
+            border-radius: 8px; /* Slightly rounded icon background if needed */
+            /* background-color: #fff; /* Optional white background for icon */
+            /* padding: 5px; */
+            /* box-shadow: 0 1px 2px rgba(0,0,0,0.1); */
+        }
+
+        .item-details {
+            flex-grow: 1;
+        }
+
+        .item-text {
+            font-size: 1.6em; /* Large text for activity name */
+            font-weight: bold;
+            color: var(--aac-text-color);
+            margin-bottom: 5px;
+        }
+
+        .item-time {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .item-action button {
+            background-color: var(--aac-button-action-bg);
+            color: var(--aac-highlight-text-color);
+            border: none;
+            padding: 15px 20px; /* Larger button padding */
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            min-width: 120px; /* Ensure button has decent width */
+        }
+        .item-action button:hover {
+            background-color: var(--aac-button-action-hover-bg);
+        }
+        .schedule-item.item-done .item-action button {
+            background-color: #A9A9A9; /* Dark Grey for done button */
+            cursor: default;
+        }
+
+
+        .no-schedule-placeholder {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.3em;
+            color: #777;
+        }
+
+        /* BACK TO MENU BUTTON (Consistent with Main Communication) */
+        .back-to-menu-footer {
+            padding-top: var(--aac-cell-gap);
+            text-align: center;
+            border-top: 1px solid var(--aac-border-color);
+            margin-top: auto; /* Push to bottom if content is short */
+        }
+        .back-to-menu-button {
+            background-color: var(--aac-highlight-color);
+            color: var(--aac-highlight-text-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .back-to-menu-button:hover {
+            background-color: #357ABD;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- This div would be displayed when navigating to the schedule -->
+    <div id="scheduleScreen" class="tablet-container-aac" style="display: flex;"> {/* Set to flex to test, change to none later */}
+        <header class="schedule-header">
+            <h1>
+                <span class="icon-placeholder" role="img" aria-label="Schedule Icon">🗓️</span>
+                My Day
+            </h1>
+            <div class="schedule-nav-buttons">
+                <button id="prevDayBtn">❮ Prev</button>
+                <button id="todayBtn" class="active-day">Today</button>
+                <button id="nextDayBtn">Next ❯</button>
+            </div>
+        </header>
+
+        <main class="schedule-list-area" id="scheduleList">
+            <!-- Schedule items will be added here by JavaScript -->
+            <!-- Example Schedule Item Structure:
+            <div class="schedule-item" data-id="1">
+                <img src="icon-url.png" alt="Activity" class="item-icon">
+                <div class="item-details">
+                    <div class="item-text">Wake Up</div>
+                    <div class="item-time">7:00 AM</div>
+                </div>
+                <div class="item-action">
+                    <button class="mark-done-btn">Done ✔</button>
+                </div>
+            </div>
+            -->
+        </main>
+
+        <footer class="back-to-menu-footer">
+            <button id="scheduleBackToMenuBtn" class="back-to-menu-button">
+                ⬅️ Back to Menu
+            </button>
+        </footer>
+    </div>
+
+    <script>
+        // --- DOM ELEMENTS ---
+        const scheduleList = document.getElementById('scheduleList');
+        const todayBtn = document.getElementById('todayBtn');
+        const prevDayBtn = document.getElementById('prevDayBtn');
+        const nextDayBtn = document.getElementById('nextDayBtn');
+        const scheduleHeaderTitle = document.querySelector('.schedule-header h1');
+        const scheduleBackToMenuBtn = document.getElementById('scheduleBackToMenuBtn');
+
+        // --- MOCK SCHEDULE DATA ---
+        // In a real app, this would be fetched or stored persistently
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+
+        const formatDateForDisplay = (date) => {
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        };
+
+
+        const mockSchedules = {
+            [formatDate(today)]: [
+                { id: 'td1', text: 'Wake Up & Get Dressed', time: '7:00 AM', icon: 'https://img.icons8.com/color/96/000000/sunrise.png', done: false },
+                { id: 'td2', text: 'Breakfast Time', time: '7:30 AM', icon: 'https://img.icons8.com/color/96/000000/kawaii-egg.png', done: false },
+                { id: 'td3', text: 'Brush Teeth', time: '8:00 AM', icon: 'https://img.icons8.com/color/96/000000/toothbrush.png', done: false },
+                { id: 'td4', text: 'Go to School / Therapy', time: '8:30 AM', icon: 'https://img.icons8.com/color/96/000000/school-bus.png', done: false },
+                { id: 'td5', text: 'Play Time', time: '4:00 PM', icon: 'https://img.icons8.com/color/96/000000/playground.png', done: false },
+                { id: 'td6', text: 'Dinner', time: '6:00 PM', icon: 'https://img.icons8.com/color/96/000000/ spaghetti.png', done: false },
+                { id: 'td7', text: 'Read a Book', time: '7:30 PM', icon: 'https://img.icons8.com/color/96/000000/book-shelf.png', done: false },
+                { id: 'td8', text: 'Bedtime', time: '8:00 PM', icon: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png', done: false },
+            ],
+            [formatDate(tomorrow)]: [
+                { id: 'tm1', text: 'Morning Routine', time: '7:00 AM', icon: 'https://img.icons8.com/color/96/000000/routine.png', done: false },
+                { id: 'tm2', text: 'Visit Grandma', time: '10:00 AM', icon: 'https://img.icons8.com/color/96/000000/grandmother.png', done: false },
+                { id: 'tm3', text: 'Park Adventure', time: '2:00 PM', icon: 'https://img.icons8.com/color/96/000000/forest.png', done: false },
+            ],
+            [formatDate(yesterday)]: [
+                 { id: 'yd1', text: 'Art Class', time: '9:00 AM', icon: 'https://img.icons8.com/color/96/000000/paint-palette.png', done: true },
+                 { id: 'yd2', text: 'Lunch with Friend', time: '12:30 PM', icon: 'https://img.icons8.com/color/96/000000/friends-hanging-out.png', done: true },
+            ]
+        };
+
+        let currentDisplayDate = new Date();
+
+        function formatDate(date) { // Helper to get YYYY-MM-DD for keys
+            const d = new Date(date);
+            let month = '' + (d.getMonth() + 1);
+            let day = '' + d.getDate();
+            const year = d.getFullYear();
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+            return [year, month, day].join('-');
+        }
+
+
+        function renderSchedule(dateToRender) {
+            scheduleList.innerHTML = ''; // Clear current items
+            const dateKey = formatDate(dateToRender);
+            const scheduleForDay = mockSchedules[dateKey] || [];
+
+            // Update header title
+            if (formatDate(dateToRender) === formatDate(new Date())) {
+                scheduleHeaderTitle.innerHTML = `<span class="icon-placeholder" role="img" aria-label="Schedule Icon">🗓️</span> Today's Plan`;
+            } else {
+                scheduleHeaderTitle.innerHTML = `<span class="icon-placeholder" role="img" aria-label="Schedule Icon">🗓️</span> ${formatDateForDisplay(dateToRender)}`;
+            }
+
+
+            if (scheduleForDay.length === 0) {
+                scheduleList.innerHTML = '<div class="no-schedule-placeholder">No activities scheduled for this day. Hooray, a free day! 🎉</div>';
+                return;
+            }
+
+            scheduleForDay.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('schedule-item');
+                itemDiv.dataset.id = item.id;
+                if (item.done) {
+                    itemDiv.classList.add('item-done');
+                }
+
+                const iconImg = document.createElement('img');
+                iconImg.src = item.icon;
+                iconImg.alt = item.text;
+                iconImg.classList.add('item-icon');
+
+                const detailsDiv = document.createElement('div');
+                detailsDiv.classList.add('item-details');
+
+                const textDiv = document.createElement('div');
+                textDiv.classList.add('item-text');
+                textDiv.textContent = item.text;
+
+                const timeDiv = document.createElement('div');
+                timeDiv.classList.add('item-time');
+                timeDiv.textContent = item.time;
+
+                detailsDiv.appendChild(textDiv);
+                detailsDiv.appendChild(timeDiv);
+
+                const actionDiv = document.createElement('div');
+                actionDiv.classList.add('item-action');
+                const doneButton = document.createElement('button');
+                doneButton.classList.add('mark-done-btn');
+                doneButton.textContent = item.done ? 'Undo' : 'Done ✔';
+                if (item.done) {
+                    doneButton.style.backgroundColor = '#FFB6C1'; // Light pink for undo
+                }
+
+                doneButton.addEventListener('click', () => toggleDoneStatus(dateKey, item.id));
+
+                actionDiv.appendChild(doneButton);
+                itemDiv.appendChild(iconImg);
+                itemDiv.appendChild(detailsDiv);
+                itemDiv.appendChild(actionDiv);
+                scheduleList.appendChild(itemDiv);
+            });
+        }
+
+        function toggleDoneStatus(dateKey, itemId) {
+            const daySchedule = mockSchedules[dateKey];
+            if (daySchedule) {
+                const item = daySchedule.find(it => it.id === itemId);
+                if (item) {
+                    item.done = !item.done;
+                    // In a real app, save this change to backend/localStorage
+                    renderSchedule(currentDisplayDate); // Re-render the list for the current date
+                }
+            }
+        }
+
+        function updateNavButtonStates() {
+            const todayFormatted = formatDate(new Date());
+            const currentFormatted = formatDate(currentDisplayDate);
+
+            todayBtn.classList.toggle('active-day', currentFormatted === todayFormatted);
+            // You can add more complex logic for prev/next if needed (e.g., disabling if no data)
+        }
+
+
+        // --- EVENT LISTENERS ---
+        todayBtn.addEventListener('click', () => {
+            currentDisplayDate = new Date();
+            renderSchedule(currentDisplayDate);
+            updateNavButtonStates();
+        });
+
+        prevDayBtn.addEventListener('click', () => {
+            currentDisplayDate.setDate(currentDisplayDate.getDate() - 1);
+            renderSchedule(currentDisplayDate);
+            updateNavButtonStates();
+        });
+
+        nextDayBtn.addEventListener('click', () => {
+            currentDisplayDate.setDate(currentDisplayDate.getDate() + 1);
+            renderSchedule(currentDisplayDate);
+            updateNavButtonStates();
+        });
+
+        scheduleBackToMenuBtn.addEventListener('click', () => {
+            window.location.href = "menu.html";
+        });
+
+
+        // --- INITIAL RENDER ---
+        renderSchedule(currentDisplayDate);
+        updateNavButtonStates();
+
+    </script>
+</body>
+</html>

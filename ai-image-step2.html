@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-APerfectChoice-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Connect Sphere - AI Image Creator (Step 2)</title>
+    <style>
+        /* GLOBAL AAC STYLES (Ensure this is consistent with other screens) */
+        :root {
+            --aac-primary-bg: #FFFFFF;
+            --aac-secondary-bg: #F0F4F8;
+            --aac-border-color: #B0C4DE;
+            --aac-text-color: #1C2C40;
+            --aac-highlight-color: #4A90E2; /* Blue for general highlights */
+            --aac-highlight-text-color: #FFFFFF;
+            --aac-cell-padding: 15px;
+            --aac-cell-gap: 15px;
+            --aac-font-family: 'Arial', sans-serif;
+            --aac-button-action-bg: #5CB85C; /* Green for positive actions */
+            --aac-button-action-hover-bg: #4CAF50;
+            --aac-button-next-bg: var(--aac-highlight-color);
+            --aac-button-next-hover-bg: #357ABD;
+            --aac-button-regenerate-bg: #ffc107; /* Yellow for regenerate */
+            --aac-button-regenerate-hover-bg: #e0a800;
+            --aac-input-bg: #FFFFFF;
+            --aac-input-border: #CCD1D9;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: var(--aac-font-family);
+            background-color: var(--aac-secondary-bg);
+            color: var(--aac-text-color);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .tablet-container-aac {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+            padding: var(--aac-cell-gap);
+        }
+
+        /* AI IMAGE CREATOR STYLES - STEP 2 */
+        .ai-image-creator-step { /* Reused from Step 1 */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--aac-primary-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .creator-header { /* Reused from Step 1 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--aac-border-color);
+            margin-bottom: 20px;
+        }
+
+        .creator-header h1 { /* Reused from Step 1 */
+            font-size: 1.8em;
+            color: var(--aac-text-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .creator-header h1 .icon-placeholder { font-size: 1.5em; }
+
+
+        .creator-header .help-button-ai { /* Reused from Step 1 */
+            background-color: transparent;
+            border: none;
+            font-size: 1.8em;
+            color: var(--aac-highlight-color);
+            cursor: pointer;
+        }
+        .back-to-step1-button { /* Specific back button for this step */
+            background-color: #f0f0f0;
+            color: var(--aac-text-color);
+            border: 1px solid var(--aac-border-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .prompt-echo-ai {
+            background-color: var(--aac-secondary-bg);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            color: #333;
+            border: 1px dashed var(--aac-border-color);
+        }
+        .prompt-echo-ai strong { color: var(--aac-text-color); }
+
+        .instruction-text-ai { /* Reused from Step 1 */
+            font-size: 1.1em; /* Slightly larger for this step's main instruction */
+            color: #555;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .thumbnail-grid-ai {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Responsive grid */
+            gap: var(--aac-cell-gap);
+            margin-bottom: 20px;
+            justify-items: center;
+        }
+
+        .thumbnail-item-ai {
+            width: 130px;
+            height: 130px;
+            border: 3px solid var(--aac-border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .thumbnail-item-ai img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-item-ai:hover {
+            border-color: var(--aac-highlight-color);
+            transform: scale(1.03);
+        }
+        .thumbnail-item-ai.selected {
+            border-color: var(--aac-button-action-bg); /* Green border for selected */
+            box-shadow: 0 0 12px rgba(92, 184, 92, 0.6);
+            transform: scale(1.05);
+        }
+
+        .large-preview-container-ai {
+            width: 100%;
+            max-width: 450px;
+            min-height: 300px;
+            margin: 0 auto 20px auto;
+            border: 2px dashed var(--aac-border-color);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--aac-secondary-bg);
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #aiLargePreviewImage {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            object-fit: contain;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .large-preview-container-ai .placeholder-text-ai {
+            color: #999;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .action-buttons-ai-step2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--aac-cell-gap);
+            margin-top: auto; /* Push to bottom */
+            padding-top: 20px;
+            border-top: 1px solid var(--aac-border-color);
+        }
+
+        .use-this-image-button, .regenerate-options-button {
+            color: var(--aac-highlight-text-color);
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .use-this-image-button .icon-placeholder, .regenerate-options-button .icon-placeholder { font-size: 1.2em; }
+
+
+        .use-this-image-button {
+            background-color: var(--aac-button-action-bg);
+            /* Initially hidden or disabled until an image is selected */
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .use-this-image-button.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .use-this-image-button:hover:not(:disabled) {
+            background-color: var(--aac-button-action-hover-bg);
+        }
+
+
+        .regenerate-options-button {
+            background-color: var(--aac-button-regenerate-bg);
+            color: var(--aac-text-color); /* Darker text for yellow button */
+        }
+        .regenerate-options-button:hover {
+            background-color: var(--aac-button-regenerate-hover-bg);
+        }
+
+    </style>
+</head>
+<body>
+    <div id="aiImageStep2Screen" class="tablet-container-aac" style="display: flex;">
+        <div class="ai-image-creator-step">
+            <header class="creator-header">
+                <button class="back-to-step1-button" id="aiStep2BackToStep1Btn">← Change Idea</button>
+                <h1><span class="icon-placeholder">🖼️</span> Pick Your Picture (2/3)</h1>
+                <button class="help-button-ai" aria-label="Help">❓</button>
+            </header>
+
+            <main>
+                <div class="prompt-echo-ai">
+                    You asked for: "<strong id="aiPromptDisplay">Your creative idea...</strong>"
+                    (Style: <span id="aiStyleDisplay">Default</span>)
+                </div>
+                <p class="instruction-text-ai">
+                    Tap a small picture to see it bigger. If you love one, tap "✅ Use This Picture!"
+                </p>
+
+                <div class="thumbnail-grid-ai" id="aiThumbnailGrid">
+                    <!-- Thumbnails will be loaded here by JavaScript -->
+                </div>
+
+                <div class="large-preview-container-ai">
+                    <img id="aiLargePreviewImage" src="" alt="Selected AI image preview" style="display: none;">
+                    <p class="placeholder-text-ai" id="aiPreviewPlaceholder">Tap a small picture to see it here!</p>
+                </div>
+            </main>
+
+            <div class="action-buttons-ai-step2">
+                <button class="use-this-image-button" id="useThisImageBtn">
+                     <span class="icon-placeholder">✅</span> Use This Picture!
+                </button>
+                <button class="regenerate-options-button" id="regenerateOptionsBtn">
+                    <span class="icon-placeholder">🔄</span> Make Different Ones!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM ELEMENTS for AI Image Step 2 ---
+        const aiImageStep2Screen = document.getElementById('aiImageStep2Screen');
+        const aiStep2BackToStep1Btn = document.getElementById('aiStep2BackToStep1Btn');
+        const aiPromptDisplay = document.getElementById('aiPromptDisplay');
+        const aiStyleDisplay = document.getElementById('aiStyleDisplay');
+        const aiThumbnailGrid = document.getElementById('aiThumbnailGrid');
+        const aiLargePreviewImage = document.getElementById('aiLargePreviewImage');
+        const aiPreviewPlaceholder = document.getElementById('aiPreviewPlaceholder');
+        const useThisImageBtn = document.getElementById('useThisImageBtn');
+        const regenerateOptionsBtn = document.getElementById('regenerateOptionsBtn');
+
+        let currentSelectedImageUrl = null; // To store the URL of the image selected in preview
+
+        // --- Load Data from Step 1 (localStorage) ---
+        const promptFromStep1 = localStorage.getItem('aiImage_prompt') || "a cute puppy";
+        const styleFromStep1 = localStorage.getItem('aiImage_style') || "cartoon";
+        const generatedUrlsString = localStorage.getItem('aiImage_generatedUrls');
+        const generatedImageUrls = generatedUrlsString ? JSON.parse(generatedUrlsString) : [
+            // Fallback dummy data if nothing in localStorage
+            `https://via.placeholder.com/400x400/FF69B4/FFFFFF?Text=Puppy1_${styleFromStep1}`,
+            `https://via.placeholder.com/400x400/7FFFD4/000000?Text=Puppy2_${styleFromStep1}`,
+            `https://via.placeholder.com/400x400/FFA07A/FFFFFF?Text=Puppy3_${styleFromStep1}`,
+            `https://via.placeholder.com/400x400/DDA0DD/000000?Text=Puppy4_${styleFromStep1}`
+        ];
+
+        // --- Populate Echoed Info & Thumbnails ---
+        aiPromptDisplay.textContent = promptFromStep1;
+        aiStyleDisplay.textContent = styleFromStep1.charAt(0).toUpperCase() + styleFromStep1.slice(1); // Capitalize
+
+        function displayThumbnails() {
+            aiThumbnailGrid.innerHTML = ''; // Clear existing
+            generatedImageUrls.forEach((imageUrl, index) => {
+                const thumbButton = document.createElement('button');
+                thumbButton.classList.add('thumbnail-item-ai');
+                thumbButton.setAttribute('aria-label', `Select generated image ${index + 1}`);
+
+                const imgElement = document.createElement('img');
+                imgElement.src = imageUrl; // Assuming thumbnail and large are same for placeholder
+                imgElement.alt = `Generated image ${index + 1} for ${promptFromStep1}`;
+
+                thumbButton.appendChild(imgElement);
+                aiThumbnailGrid.appendChild(thumbButton);
+
+                thumbButton.addEventListener('click', () => {
+                    aiLargePreviewImage.src = imageUrl;
+                    aiLargePreviewImage.style.display = 'block';
+                    aiPreviewPlaceholder.style.display = 'none';
+                    currentSelectedImageUrl = imageUrl;
+
+                    useThisImageBtn.classList.add('active'); // Enable the "Use This Image" button
+
+                    // Highlight selected thumbnail
+                    document.querySelectorAll('.thumbnail-item-ai').forEach(item => item.classList.remove('selected'));
+                    thumbButton.classList.add('selected');
+                });
+            });
+        }
+        displayThumbnails(); // Initial display
+
+
+        // --- Button Event Listeners ---
+        aiStep2BackToStep1Btn.addEventListener('click', () => {
+            alert("Navigating back to Step 1 (Change Idea)...");
+            window.location.href = "tạo ảnh bước 1.html";
+        });
+
+        regenerateOptionsBtn.addEventListener('click', () => {
+            alert("Asking the AI to make different pictures with the same idea...\n(Simulating regeneration)");
+            // In a real app:
+            // 1. Show loading state (similar to Step 1's loading indicator)
+            // 2. Make API call to generate new images using promptFromStep1 and styleFromStep1
+            // 3. Update 'generatedImageUrls' with new results
+            // 4. Call displayThumbnails() again
+            // 5. Reset preview and 'Use This Image' button state
+            aiLargePreviewImage.style.display = 'none';
+            aiPreviewPlaceholder.style.display = 'block';
+            useThisImageBtn.classList.remove('active');
+            currentSelectedImageUrl = null;
+            // Simulate new images
+            const newSimulatedUrls = [
+                `https://via.placeholder.com/400x400/C0C0C0/000000?Text=New1_${styleFromStep1}`,
+                `https://via.placeholder.com/400x400/808080/FFFFFF?Text=New2_${styleFromStep1}`
+            ];
+            localStorage.setItem('aiImage_generatedUrls', JSON.stringify(newSimulatedUrls)); // Update localStorage
+            window.location.reload(); // Simple way to re-trigger load from localStorage for demo
+        });
+
+        useThisImageBtn.addEventListener('click', () => {
+            if (!currentSelectedImageUrl) {
+                alert("Please pick one of the pictures first!");
+                return;
+            }
+            localStorage.setItem('aiImage_finalSelectedUrl', currentSelectedImageUrl);
+            localStorage.setItem('aiImage_promptForFinal', promptFromStep1); // Carry over prompt for Step 3
+            localStorage.setItem('aiImage_styleForFinal', styleFromStep1); // Carry over style for Step 3
+
+            alert(`Great choice! Navigating to Step 3 (Save & Link)...\nSelected: ${currentSelectedImageUrl}`);
+            window.location.href = "tạo ảnh bước 3.html";
+        });
+
+        // Help button functionality (placeholder)
+        document.querySelector('.help-button-ai').addEventListener('click', () => {
+            alert("Pick Your Picture Help:\n\n1. Look at the small pictures the AI made.\n2. Tap on one to see it bigger.\n3. If you like it, tap '✅ Use This Picture!'.\n4. If not, tap '🔄 Make Different Ones!' to try again.");
+        });
+
+    </script>
+</body>
+</html>

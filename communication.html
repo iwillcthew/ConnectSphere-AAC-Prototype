@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-APerfectChoice-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Connect Sphere - Main Communication</title>
+    <style>
+        /* GLOBAL AAC STYLES */
+        :root {
+            --aac-primary-bg: #FFFFFF;
+            --aac-secondary-bg: #F0F4F8;
+            --aac-border-color: #B0C4DE;
+            --aac-text-color: #1C2C40;
+            --aac-highlight-color: #4A90E2;
+            --aac-highlight-text-color: #FFFFFF;
+            --aac-cell-padding: 10px;
+            --aac-cell-gap: 10px;
+            --aac-font-family: 'Arial', sans-serif;
+            --aac-button-action-bg: #5CB85C;
+            --aac-button-action-hover-bg: #4CAF50;
+            --aac-button-destructive-bg: #D9534F;
+            --aac-button-destructive-hover-bg: #C9302C;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: var(--aac-font-family);
+            background-color: var(--aac-secondary-bg);
+            color: var(--aac-text-color);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .tablet-container-aac {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+            padding: var(--aac-cell-gap);
+        }
+
+        /* A. SENTENCE STRIP */
+        .sentence-strip {
+            display: flex;
+            align-items: center;
+            background-color: var(--aac-primary-bg);
+            padding: 10px;
+            border: 2px solid var(--aac-border-color);
+            border-radius: 8px;
+            margin-bottom: var(--aac-cell-gap);
+            min-height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .sentence-content {
+            flex-grow: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+            overflow-x: auto;
+            padding: 5px 0;
+        }
+
+        .sentence-chip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--aac-secondary-bg);
+            border: 1px solid var(--aac-border-color);
+            border-radius: 6px;
+            padding: 5px 8px;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .sentence-chip img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            margin-bottom: 3px;
+        }
+
+        .sentence-chip span {
+            font-size: 0.8em;
+            color: var(--aac-text-color);
+            white-space: nowrap;
+        }
+        .sentence-chip-placeholder {
+            font-style: italic;
+            color: #777;
+            padding: 10px;
+        }
+
+
+        .sentence-controls button {
+            background-color: transparent;
+            border: none;
+            font-size: 2em;
+            color: var(--aac-highlight-color);
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-left: 8px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .sentence-controls button:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        .sentence-controls .clear-button {
+            color: var(--aac-button-destructive-bg);
+        }
+
+        /* B. AI SUGGESTION BAR */
+        .ai-suggestion-bar {
+            display: flex;
+            gap: var(--aac-cell-gap);
+            padding: 0 0 var(--aac-cell-gap) 0;
+            overflow-x: auto;
+            background-color: transparent;
+            height: 100px;
+            align-items: stretch;
+        }
+
+        .suggestion-chip {
+            flex: 0 0 auto;
+            min-width: 120px;
+            background-color: var(--aac-primary-bg);
+            border: 2px solid var(--aac-highlight-color);
+            border-radius: 8px;
+            padding: var(--aac-cell-padding);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .suggestion-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .suggestion-chip img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+
+        .suggestion-chip span {
+            font-size: 1em;
+            color: var(--aac-text-color);
+            font-weight: bold;
+        }
+
+        /* C. MAIN VOCABULARY/TOPIC DISPLAY AREA */
+        .main-display-area {
+            flex-grow: 1;
+            display: grid;
+            gap: var(--aac-cell-gap);
+            padding: var(--aac-cell-padding);
+            background-color: var(--aac-primary-bg);
+            border: 2px solid var(--aac-border-color);
+            border-radius: 8px;
+            overflow-y: auto;
+        }
+
+        .grid-cell {
+            background-color: var(--aac-secondary-bg);
+            border: 2px solid var(--aac-border-color);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--aac-cell-padding);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            min-height: 100px;
+        }
+        .grid-cell:hover {
+            border-color: var(--aac-highlight-color);
+            transform: scale(1.02);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .grid-cell.topic-cell {
+            background-color: #D1E8FF; /* Lighter blue for topics */
+        }
+         .grid-cell.topic-cell-food { background-color: #FFDEAD; } /* Navajo White for Food */
+        .grid-cell.topic-cell-actions { background-color: #90EE90; } /* Light Green for Actions */
+        .grid-cell.topic-cell-feelings { background-color: #FFB6C1; } /* Light Pink for Feelings */
+        .grid-cell.topic-cell-people { background-color: #FFFFE0; } /* Light Yellow for People */
+        .grid-cell.topic-cell-places { background-color: #ADD8E6; } /* Light Blue for Places */
+        .grid-cell.topic-cell-colors { background-color: #E6E6FA; } /* Lavender for Colors/Describe */
+        .grid-cell.topic-cell-questions { background-color: #FFDAB9; } /* PeachPuff for Questions */
+        .grid-cell.topic-cell-time { background-color: #D3D3D3; } /* Light Grey for Time */
+        .grid-cell.topic-cell-chat { background-color: #AFEEEE; } /* PaleTurquoise for Chat */
+        .grid-cell.topic-cell-school { background-color: #FFFACD; } /* LemonChiffon for School */
+        .grid-cell.topic-cell-toys { background-color: #DA70D6; } /* Orchid for Toys */
+        .grid-cell.topic-cell-animals { background-color: #98FB98; } /* PaleGreen for Animals */
+        .grid-cell.topic-cell-numbers { background-color: #F0E68C; } /* Khaki for Numbers */
+        .grid-cell.topic-cell-clothes { background-color: #E0FFFF; } /* LightCyan for Clothes */
+        .grid-cell.topic-cell-body { background-color: #FFE4E1; } /* MistyRose for Body Parts */
+        .grid-cell.topic-cell-nature { background-color: #90EE90; } /* LightGreen for Nature */
+        .grid-cell.topic-cell-vehicles { background-color: #B0C4DE; } /* LightSteelBlue for Vehicles */
+
+
+        .grid-cell.back-to-topics-cell {
+            background-color: #FFEBCD;
+            font-weight: bold;
+        }
+
+
+        .grid-cell img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+        .grid-cell span {
+            font-size: 1.1em;
+            color: var(--aac-text-color);
+            font-weight: 500;
+            word-break: break-word; /* Prevent long words from breaking layout */
+        }
+
+        .empty-grid-placeholder {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #777;
+        }
+
+        /* Virtual Keyboard Styles */
+        .keyboard-container {
+            display: none;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(240, 244, 248, 0.95);
+            padding: 10px;
+            border-top: 2px solid var(--aac-border-color);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-height: 40vh;
+            overflow-y: auto;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .keyboard-key {
+            min-width: 40px;
+            height: 40px;
+            margin: 0 4px;
+            background-color: var(--aac-primary-bg);
+            border: 1px solid var(--aac-border-color);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            transition: all 0.1s ease;
+        }
+
+        .keyboard-key:hover {
+            background-color: var(--aac-secondary-bg);
+        }
+
+        .keyboard-key:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+
+        .keyboard-key.wide {
+            min-width: 80px;
+        }
+
+        .keyboard-key.space {
+            min-width: 150px;
+        }
+
+        .keyboard-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--aac-button-destructive-bg);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .keyboard-word-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            border: 2px solid var(--aac-highlight-color);
+            border-radius: 6px;
+        }
+        
+        .keyboard-actions {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        
+        .keyboard-action-btn {
+            padding: 8px 15px;
+            background-color: var(--aac-highlight-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        
+        .keyboard-action-btn.add-word {
+            background-color: var(--aac-button-action-bg);
+        }
+        
+        .keyboard-action-btn.clear-input {
+            background-color: var(--aac-button-destructive-bg);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="tablet-container-aac">
+        <!-- A. SENTENCE STRIP -->
+        <div class="sentence-strip">
+            <div class="sentence-content" id="sentenceContent">
+                <span class="sentence-chip-placeholder">Tap words below to start...</span>
+            </div>
+            <div class="sentence-controls">
+                <button id="keyboardBtn" title="Open Keyboard">⌨️</button>
+                <button id="completeSentenceBtn" title="Complete Sentence">✨</button>
+                <button id="speakBtn" title="Speak Sentence">🔊</button>
+                <button id="backspaceBtn" title="Delete Last Word">⏪</button>
+                <button id="clearAllBtn" title="Clear Sentence" class="clear-button">🗑️</button>
+            </div>
+        </div>
+
+        <!-- B. AI SUGGESTION BAR -->
+        <div class="ai-suggestion-bar" id="aiSuggestionBar">
+            <!-- AI Suggestion chips will be added here by JavaScript -->
+        </div>
+
+        <!-- C. MAIN VOCABULARY/TOPIC DISPLAY AREA -->
+        <div class="main-display-area" id="mainDisplayArea">
+            <!-- Topic/Word grid cells will be added here by JavaScript -->
+        </div>
+        
+        <!-- Virtual Keyboard -->
+        <div id="virtualKeyboard" class="keyboard-container">
+            <button id="closeKeyboard" class="keyboard-close">✕</button>
+            <input type="text" id="keyboardInput" class="keyboard-word-input" placeholder="Type a word...">
+            
+            <div class="keyboard-actions">
+                <button id="addWordBtn" class="keyboard-action-btn add-word">Add Word</button>
+                <button id="clearInputBtn" class="keyboard-action-btn clear-input">Clear</button>
+            </div>
+            
+            <div class="keyboard-row">
+                <button class="keyboard-key">q</button>
+                <button class="keyboard-key">w</button>
+                <button class="keyboard-key">e</button>
+                <button class="keyboard-key">r</button>
+                <button class="keyboard-key">t</button>
+                <button class="keyboard-key">y</button>
+                <button class="keyboard-key">u</button>
+                <button class="keyboard-key">i</button>
+                <button class="keyboard-key">o</button>
+                <button class="keyboard-key">p</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="keyboard-key">a</button>
+                <button class="keyboard-key">s</button>
+                <button class="keyboard-key">d</button>
+                <button class="keyboard-key">f</button>
+                <button class="keyboard-key">g</button>
+                <button class="keyboard-key">h</button>
+                <button class="keyboard-key">j</button>
+                <button class="keyboard-key">k</button>
+                <button class="keyboard-key">l</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="keyboard-key">z</button>
+                <button class="keyboard-key">x</button>
+                <button class="keyboard-key">c</button>
+                <button class="keyboard-key">v</button>
+                <button class="keyboard-key">b</button>
+                <button class="keyboard-key">n</button>
+                <button class="keyboard-key">m</button>
+                <button class="keyboard-key wide">⌫</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="keyboard-key wide">123</button>
+                <button class="keyboard-key space">Space</button>
+                <button class="keyboard-key wide">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM ELEMENTS ---
+        const sentenceContent = document.getElementById('sentenceContent');
+        const completeSentenceBtn = document.getElementById('completeSentenceBtn');
+        const speakBtn = document.getElementById('speakBtn');
+        const keyboardBtn = document.getElementById('keyboardBtn');
+        const backspaceBtn = document.getElementById('backspaceBtn');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const aiSuggestionBar = document.getElementById('aiSuggestionBar');
+        const mainDisplayArea = document.getElementById('mainDisplayArea');
+        const virtualKeyboard = document.getElementById('virtualKeyboard');
+        const closeKeyboard = document.getElementById('closeKeyboard');
+        const keyboardInput = document.getElementById('keyboardInput');
+        const addWordBtn = document.getElementById('addWordBtn');
+        const clearInputBtn = document.getElementById('clearInputBtn');
+
+        let currentSentence = [];
+
+        // --- UPDATED MOCK DATA ---
+        // Using icons8.com "Fluent" or "Color" sets for better availability
+        // Note: Real AAC apps use specialized, consistent symbol sets. These are illustrative.
+        const mockTopics = [
+            { id: 'food', name: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png', className: 'topic-cell-food', words: [
+                { text: 'Apple', image: 'https://img.icons8.com/color/96/000000/apple.png' },
+                { text: 'Banana', image: 'https://img.icons8.com/color/96/000000/banana.png' },
+                { text: 'Cookie', image: 'https://img.icons8.com/color/96/000000/cookie.png' },
+                { text: 'Water', image: 'https://img.icons8.com/color/96/000000/water-bottle.png' },
+                { text: 'Milk', image: 'https://img.icons8.com/color/96/000000/milk-bottle.png' },
+                { text: 'Juice', image: 'https://img.icons8.com/color/96/000000/juice-box.png' },
+                { text: 'Bread', image: 'https://img.icons8.com/color/96/000000/bread.png' },
+                { text: 'Cheese', image: 'https://img.icons8.com/color/96/000000/cheese.png' },
+            ]},
+            { id: 'actions', name: 'Actions', image: 'https://img.icons8.com/color/96/000000/running.png', className: 'topic-cell-actions', words: [
+                { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
+                { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' }, // Changed from eating person
+                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' }, // Changed
+                { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' }, // Kept
+                { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' }, // Changed
+                { text: 'Stop', image: 'https://img.icons8.com/color/96/000000/stop-sign.png' },
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+                { text: 'Look', image: 'https://img.icons8.com/color/96/000000/visible.png' },
+                { text: 'Listen', image: 'https://img.icons8.com/color/96/000000/listening.png' },
+            ]},
+            { id: 'feelings', name: 'Feelings', image: 'https://img.icons8.com/color/96/000000/smiling-face-with-heart.png', className: 'topic-cell-feelings', words: [
+                { text: 'Happy', image: 'https://img.icons8.com/color/96/000000/happy.png' },
+                { text: 'Sad', image: 'https://img.icons8.com/color/96/000000/sad.png' },
+                { text: 'Tired', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Angry', image: 'https://img.icons8.com/color/96/000000/angry-face.png' }, // Changed
+                { text: 'Scared', image: 'https://img.icons8.com/color/96/000000/fearful-face.png' },
+                { text: 'Excited', image: 'https://img.icons8.com/color/96/000000/partying-face.png' },
+            ]},
+            { id: 'people', name: 'People', image: 'https://img.icons8.com/color/96/000000/conference-call.png', className: 'topic-cell-people', words: [
+                { text: 'I / Me', image: 'https://img.icons8.com/color/96/000000/guest-male.png' },
+                { text: 'You', image: 'https://img.icons8.com/color/96/000000/pointing-at-self.png' }, // Changed to pointing at viewer
+                { text: 'Mommy', image: 'https://img.icons8.com/color/96/000000/mother.png' },
+                { text: 'Daddy', image: 'https://img.icons8.com/color/96/000000/father.png' },
+                { text: 'Friend', image: 'https://img.icons8.com/color/96/000000/friends.png' },
+                { text: 'Teacher', image: 'https://img.icons8.com/color/96/000000/teacher.png' },
+            ]},
+            { id: 'places', name: 'Places', image: 'https://img.icons8.com/color/96/000000/location-pin.png', className: 'topic-cell-places', words: [
+                 { text: 'Home', image: 'https://img.icons8.com/color/96/000000/home.png' },
+                 { text: 'School', image: 'https://img.icons8.com/color/96/000000/school-building.png' }, // Changed
+                 { text: 'Park', image: 'https://img.icons8.com/color/96/000000/park-with-street-light.png' }, // Changed
+                 { text: 'Store', image: 'https://img.icons8.com/color/96/000000/shop.png' },
+                 { text: 'Outside', image: 'https://img.icons8.com/color/96/000000/forest.png' },
+            ]},
+            { id: 'colors', name: 'Colors', image: 'https://img.icons8.com/color/96/000000/color-palette.png', className: 'topic-cell-colors', words: [
+                { text: 'Red', image: 'https://img.icons8.com/fluency/96/stop-sign.png' }, // Using stop sign for red
+                { text: 'Blue', image: 'https://img.icons8.com/fluency/96/ocean-wave.png' }, // Using wave for blue
+                { text: 'Green', image: 'https://img.icons8.com/fluency/96/clover.png' }, // Using clover for green
+                { text: 'Yellow', image: 'https://img.icons8.com/fluency/96/sun.png' },
+                { text: 'Black', image: 'https://img.icons8.com/fluency/96/night.png' },
+                { text: 'White', image: 'https://img.icons8.com/fluency/96/cloud.png' },
+             ]},
+             { id: 'toys', name: 'Toys', image: 'https://img.icons8.com/color/96/000000/teddy-bear.png', className: 'topic-cell-toys', words: [
+                { text: 'Ball', image: 'https://img.icons8.com/color/96/000000/empty-trash.png' }, // Replaced with beach ball (was trash)
+                { text: 'Car', image: 'https://img.icons8.com/color/96/000000/car.png' },
+                { text: 'Doll', image: 'https://img.icons8.com/color/96/000000/barbie-doll.png' },
+                { text: 'Blocks', image: 'https://img.icons8.com/color/96/000000/lego.png' },
+             ]},
+             { id: 'animals', name: 'Animals', image: 'https://img.icons8.com/color/96/000000/dog-paw-print.png', className: 'topic-cell-animals', words: [
+                { text: 'Dog', image: 'https://img.icons8.com/color/96/000000/dog.png' },
+                { text: 'Cat', image: 'https://img.icons8.com/color/96/000000/cat.png' },
+                { text: 'Bird', image: 'https://img.icons8.com/color/96/000000/bird.png' },
+                { text: 'Fish', image: 'https://img.icons8.com/color/96/000000/fish-food.png' }, // Fish icon
+             ]},
+             { id: 'numbers', name: 'Numbers', image: 'https://img.icons8.com/color/96/000000/123.png', className: 'topic-cell-numbers', words: [
+                { text: 'One', image: 'https://img.icons8.com/color/96/000000/1-c.png' },
+                { text: 'Two', image: 'https://img.icons8.com/color/96/000000/2-c.png' },
+                { text: 'Three', image: 'https://img.icons8.com/color/96/000000/3-c.png' },
+                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+             ]},
+             { id: 'questions', name: 'Questions', image: 'https://img.icons8.com/color/96/000000/ask-question.png', className: 'topic-cell-questions', words: [
+                { text: 'What?', image: 'https://img.icons8.com/color/96/000000/thinking-bubble.png' },
+                { text: 'Where?', image: 'https://img.icons8.com/color/96/000000/place-marker.png' },
+                { text: 'When?', image: 'https://img.icons8.com/color/96/000000/tear-off-calendar.png' },
+                { text: 'Who?', image: 'https://img.icons8.com/color/96/000000/who.png' }, // "Who" icon
+                { text: 'Why?', image: 'https://img.icons8.com/color/96/000000/why-quest.png' }, // "Why" icon
+             ]},
+             { id: 'time', name: 'Time', image: 'https://img.icons8.com/color/96/000000/time.png', className: 'topic-cell-time', words: [
+                { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' },
+                { text: 'Later', image: 'https://img.icons8.com/color/96/000000/sand-watch.png' },
+                { text: 'Today', image: 'https://img.icons8.com/color/96/000000/today.png' },
+                { text: 'Tomorrow', image: 'https://img.icons8.com/color/96/000000/tomorrow.png' },
+             ]},
+             { id: 'chat', name: 'Chat', image: 'https://img.icons8.com/color/96/000000/speech-bubble.png', className: 'topic-cell-chat', words: [
+                { text: 'Yes', image: 'https://img.icons8.com/color/96/000000/checked-checkbox.png' },
+                { text: 'No', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
+                { text: 'Please', image: 'https://img.icons8.com/color/96/000000/please.png' }, // "Please" icon
+                { text: 'Thank You', image: 'https://img.icons8.com/color/96/000000/thank-you.png' }, // "Thank You" icon
+                { text: 'Hello', image: 'https://img.icons8.com/color/96/000000/handshake.png' },
+                { text: 'Goodbye', image: 'https://img.icons8.com/color/96/000000/waving-hand-emoji.png' },
+             ]},
+             { id: 'school', name: 'School', image: 'https://img.icons8.com/color/96/000000/school.png', className: 'topic-cell-school', words: [
+                { text: 'Book', image: 'https://img.icons8.com/color/96/000000/book.png'},
+                { text: 'Pen', image: 'https://img.icons8.com/color/96/000000/ballpoint-pen.png'},
+                { text: 'Read', image: 'https://img.icons8.com/color/96/000000/reading.png'},
+                { text: 'Write', image: 'https://img.icons8.com/color/96/000000/writing-implement.png'},
+             ]},
+             { id: 'clothes', name: 'Clothes', image: 'https://img.icons8.com/color/96/000000/clothes.png', className: 'topic-cell-clothes', words: [
+                { text: 'Shirt', image: 'https://img.icons8.com/color/96/000000/shirt.png'},
+                { text: 'Pants', image: 'https://img.icons8.com/color/96/000000/trousers.png'},
+                { text: 'Shoes', image: 'https://img.icons8.com/color/96/000000/trainers.png'},
+                { text: 'Hat', image: 'https://img.icons8.com/color/96/000000/sun-hat.png'},
+             ]},
+             { id: 'body', name: 'Body Parts', image: 'https://img.icons8.com/color/96/000000/torso.png', className: 'topic-cell-body', words: [
+                { text: 'Head', image: 'https://img.icons8.com/color/96/000000/head-profile.png'},
+                { text: 'Hands', image: 'https://img.icons8.com/color/96/000000/hand.png'},
+                { text: 'Feet', image: 'https://img.icons8.com/color/96/000000/footprint.png'},
+                { text: 'Eyes', image: 'https://img.icons8.com/color/96/000000/visible.png'},
+             ]},
+             { id: 'nature', name: 'Nature', image: 'https://img.icons8.com/color/96/000000/deciduous-tree.png', className: 'topic-cell-nature', words: [
+                { text: 'Tree', image: 'https://img.icons8.com/color/96/000000/deciduous-tree.png'},
+                { text: 'Flower', image: 'https://img.icons8.com/color/96/000000/flower.png'},
+                { text: 'Sun', image: 'https://img.icons8.com/color/96/000000/sun.png'},
+                { text: 'Moon', image: 'https://img.icons8.com/color/96/000000/bright-moon.png'},
+             ]},
+             { id: 'vehicles', name: 'Vehicles', image: 'https://img.icons8.com/color/96/000000/fiat-500.png', className: 'topic-cell-vehicles', words: [
+                { text: 'Car', image: 'https://img.icons8.com/color/96/000000/fiat-500.png'},
+                { text: 'Bus', image: 'https://img.icons8.com/color/96/000000/bus.png'},
+                { text: 'Train', image: 'https://img.icons8.com/color/96/000000/train.png'},
+                { text: 'Bike', image: 'https://img.icons8.com/color/96/000000/bicycle.png'},
+             ]},
+        ];
+
+        const mockAISuggestions = [
+            { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
+            { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
+            { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+            { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' },
+            { text: 'Yes', image: 'https://img.icons8.com/color/96/000000/checked-checkbox.png' },
+            { text: 'No', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
+        ];
+
+        // --- FUNCTIONS ---
+
+        function updateSentenceDisplay() {
+            sentenceContent.innerHTML = '';
+            if (currentSentence.length === 0) {
+                const placeholder = document.createElement('span');
+                placeholder.classList.add('sentence-chip-placeholder');
+                placeholder.textContent = 'Tap words below to start...';
+                sentenceContent.appendChild(placeholder);
+                return;
+            }
+            currentSentence.forEach(item => {
+                const chip = document.createElement('div');
+                chip.classList.add('sentence-chip');
+                const img = document.createElement('img');
+                img.src = item.image;
+                img.alt = item.text;
+                const span = document.createElement('span');
+                span.textContent = item.text;
+                chip.appendChild(img);
+                chip.appendChild(span);
+                sentenceContent.appendChild(chip);
+            });
+        }
+
+        function addWordToSentence(wordData) {
+            currentSentence.push(wordData);
+            updateSentenceDisplay();
+            updateAISuggestions();
+        }
+
+        function speakSentence() {
+            const sentenceText = currentSentence.map(item => item.text).join(' ');
+            if (sentenceText.trim() === '') {
+                alert("Nothing to say yet!");
+                return;
+            }
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(sentenceText);
+                speechSynthesis.speak(utterance);
+            } else {
+                alert("Sorry, your browser doesn't support speech synthesis.");
+            }
+            console.log("Speaking:", sentenceText);
+        }
+
+        function renderTopics() {
+            mainDisplayArea.innerHTML = '';
+            mainDisplayArea.style.gridTemplateColumns = 'repeat(auto-fit, minmax(150px, 1fr))';
+
+            mockTopics.forEach(topic => {
+                const cell = document.createElement('div');
+                cell.classList.add('grid-cell', 'topic-cell');
+                if (topic.className) { // Add specific topic class for color
+                    cell.classList.add(topic.className);
+                }
+                cell.dataset.topicId = topic.id;
+                const img = document.createElement('img');
+                img.src = topic.image;
+                img.alt = topic.name;
+                const span = document.createElement('span');
+                span.textContent = topic.name;
+                cell.appendChild(img);
+                cell.appendChild(span);
+                cell.addEventListener('click', () => renderWordsForTopic(topic.id));
+                mainDisplayArea.appendChild(cell);
+            });
+             if (mockTopics.length === 0) {
+                mainDisplayArea.innerHTML = '<div class="empty-grid-placeholder">No topics available. Add some in settings!</div>';
+            }
+        }
+
+        function renderWordsForTopic(topicId) {
+            const topic = mockTopics.find(t => t.id === topicId);
+            if (!topic) return;
+
+            mainDisplayArea.innerHTML = '';
+            mainDisplayArea.style.gridTemplateColumns = 'repeat(auto-fit, minmax(120px, 1fr))';
+
+            const backCell = document.createElement('div');
+            backCell.classList.add('grid-cell', 'back-to-topics-cell');
+            const backImg = document.createElement('img');
+            backImg.src = 'https://img.icons8.com/fluency/96/000000/return.png'; // Fluent return icon
+            backImg.alt = 'Back';
+            const backSpan = document.createElement('span');
+            backSpan.textContent = 'Back to Topics';
+            backCell.appendChild(backImg);
+            backCell.appendChild(backSpan);
+            backCell.addEventListener('click', renderTopics);
+            mainDisplayArea.appendChild(backCell);
+
+            if (topic.words && topic.words.length > 0) {
+                topic.words.forEach(word => {
+                    const cell = document.createElement('div');
+                    cell.classList.add('grid-cell');
+                    cell.dataset.word = word.text;
+                    const img = document.createElement('img');
+                    img.src = word.image;
+                    img.alt = word.text;
+                    const span = document.createElement('span');
+                    span.textContent = word.text;
+                    cell.appendChild(img);
+                    cell.appendChild(span);
+                    cell.addEventListener('click', () => addWordToSentence(word));
+                    mainDisplayArea.appendChild(cell);
+                });
+            } else {
+                 const emptyPlaceholder = document.createElement('div');
+                 emptyPlaceholder.classList.add('empty-grid-placeholder');
+                 emptyPlaceholder.textContent = `No words in "${topic.name}" yet. Add some in settings!`;
+                 mainDisplayArea.appendChild(emptyPlaceholder);
+            }
+        }
+
+        function updateAISuggestions() {
+            aiSuggestionBar.innerHTML = '';
+            mockAISuggestions.slice(0, 6).forEach(suggestion => {
+                const chip = document.createElement('div');
+                chip.classList.add('suggestion-chip');
+                const img = document.createElement('img');
+                img.src = suggestion.image;
+                img.alt = suggestion.text;
+                const span = document.createElement('span');
+                span.textContent = suggestion.text;
+                chip.appendChild(img);
+                chip.appendChild(span);
+                chip.addEventListener('click', () => addWordToSentence(suggestion));
+                aiSuggestionBar.appendChild(chip);
+            });
+        }
+
+        // --- EVENT LISTENERS ---
+        speakBtn.addEventListener('click', speakSentence);
+
+        backspaceBtn.addEventListener('click', () => {
+            currentSentence.pop();
+            updateSentenceDisplay();
+            updateAISuggestions();
+        });
+
+        clearAllBtn.addEventListener('click', () => {
+            // Consider a more AAC-friendly confirmation, e.g., "Hold to Clear" or a two-step visual confirmation
+            if (confirm("Are you sure you want to clear the sentence?")) {
+                currentSentence = [];
+                updateSentenceDisplay();
+                updateAISuggestions();
+            }
+        });
+
+        completeSentenceBtn.addEventListener('click', () => {
+            if (currentSentence.length > 0) {
+                const lastWordObj = currentSentence[currentSentence.length - 1];
+                let completion = [];
+
+                // Simple mock AI logic based on last word
+                if (lastWordObj.text.toLowerCase() === 'i') {
+                    completion = [{ text: 'want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' }];
+                } else if (lastWordObj.text.toLowerCase() === 'want') {
+                    completion = [
+                        { text: 'to', image: 'https://img.icons8.com/color/96/000000/text-box.png' }, // Placeholder for "to"
+                        { text: 'eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' }
+                    ];
+                } else if (lastWordObj.text.toLowerCase() === 'eat') {
+                     completion = [{ text: 'apple', image: 'https://img.icons8.com/color/96/000000/apple.png' }];
+                } else if (currentSentence.some(w => w.text.toLowerCase() === 'cookie')) {
+                    // If "cookie" is anywhere, and it's the last word or a recent one.
+                    // Let's try to form "I want [a] cookie"
+                    if (!currentSentence.find(w => w.text.toLowerCase() === 'i')) {
+                         currentSentence.unshift({ text: 'I', image: 'https://img.icons8.com/color/96/000000/guest-male.png' });
+                    }
+                    if (!currentSentence.find(w => w.text.toLowerCase() === 'want')) {
+                        // Find index of "I" and insert "want" after it
+                        const iIndex = currentSentence.findIndex(w => w.text.toLowerCase() === 'i');
+                        if (iIndex !== -1) {
+                            currentSentence.splice(iIndex + 1, 0, { text: 'want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' });
+                        } else { // if "I" wasn't added (e.g., sentence started with something else)
+                             currentSentence.unshift({ text: 'want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' });
+                             currentSentence.unshift({ text: 'I', image: 'https://img.icons8.com/color/96/000000/guest-male.png' });
+                        }
+                    }
+                     // Check for "a" or "the" before cookie, if not, add "a"
+                    const cookieIndex = currentSentence.findIndex(w => w.text.toLowerCase() === 'cookie');
+                    if (cookieIndex > 0) {
+                        const wordBeforeCookie = currentSentence[cookieIndex -1].text.toLowerCase();
+                        if (wordBeforeCookie !== 'a' && wordBeforeCookie !== 'the') {
+                             currentSentence.splice(cookieIndex, 0, { text: 'a', image: 'https://img.icons8.com/color/96/000000/alphabet-boy-on-a-b-c-cubes.png' }); // Placeholder for "a"
+                        }
+                    } else if (cookieIndex === 0 && currentSentence.length ===1) { // Only "cookie" in sentence
+                        currentSentence.unshift({ text: 'a', image: 'https://img.icons8.com/color/96/000000/alphabet-boy-on-a-b-c-cubes.png' });
+                        currentSentence.unshift({ text: 'want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' });
+                        currentSentence.unshift({ text: 'I', image: 'https://img.icons8.com/color/96/000000/guest-male.png' });
+                    }
+
+                } else { // Default completion if no specific logic matches
+                    completion = [{ text: 'please', image: 'https://img.icons8.com/color/96/000000/please.png' }];
+                }
+
+                completion.forEach(word => currentSentence.push(word));
+                updateSentenceDisplay();
+                updateAISuggestions();
+            } else {
+                alert("Tap a word first to complete the sentence!");
+            }
+        });
+
+        // --- INITIAL RENDER ---
+        renderTopics();
+        updateSentenceDisplay();
+        updateAISuggestions();
+
+        // Add back to menu button
+        const backToMenuButton = document.createElement('button');
+        backToMenuButton.id = 'backToMenuBtn';
+        backToMenuButton.innerHTML = '🏠 Back to Menu';
+        backToMenuButton.style.position = 'fixed';
+        backToMenuButton.style.bottom = '20px';
+        backToMenuButton.style.right = '20px';
+        backToMenuButton.style.backgroundColor = '#4A90E2';
+        backToMenuButton.style.color = '#FFFFFF';
+        backToMenuButton.style.border = 'none';
+        backToMenuButton.style.borderRadius = '8px';
+        backToMenuButton.style.padding = '10px 15px';
+        backToMenuButton.style.fontSize = '1em';
+        backToMenuButton.style.fontWeight = 'bold';
+        backToMenuButton.style.cursor = 'pointer';
+        backToMenuButton.style.zIndex = '1000';
+        backToMenuButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+        backToMenuButton.addEventListener('click', function() {
+            window.location.href = 'menu.html';
+        });
+        document.body.appendChild(backToMenuButton);
+
+        // --- VIRTUAL KEYBOARD FUNCTIONALITY ---
+        keyboardBtn.addEventListener('click', () => {
+            virtualKeyboard.style.display = 'block';
+            keyboardInput.focus();
+        });
+
+        closeKeyboard.addEventListener('click', () => {
+            virtualKeyboard.style.display = 'none';
+        });
+
+        // Add typed word to sentence
+        addWordBtn.addEventListener('click', () => {
+            const word = keyboardInput.value.trim();
+            if (word) {
+                // Create a basic word object with default icon
+                const wordObj = {
+                    text: word,
+                    image: 'https://img.icons8.com/color/96/000000/text-box.png' // Default placeholder icon
+                };
+                addWordToSentence(wordObj);
+                keyboardInput.value = '';
+            }
+        });
+
+        clearInputBtn.addEventListener('click', () => {
+            keyboardInput.value = '';
+            keyboardInput.focus();
+        });
+
+        // Handle keyboard key presses
+        document.querySelectorAll('.keyboard-key').forEach(key => {
+            key.addEventListener('click', () => {
+                const keyText = key.textContent;
+                
+                if (keyText === '⌫') {
+                    // Backspace - remove last character
+                    keyboardInput.value = keyboardInput.value.slice(0, -1);
+                } else if (keyText === 'Space') {
+                    // Add space
+                    keyboardInput.value += ' ';
+                } else if (keyText === 'Done') {
+                    // Close keyboard
+                    virtualKeyboard.style.display = 'none';
+                } else if (keyText === '123') {
+                    // Toggle to number keyboard (not implemented in this basic version)
+                    alert('Number keyboard not implemented in this demo');
+                } else {
+                    // Add the character
+                    keyboardInput.value += keyText;
+                }
+                
+                keyboardInput.focus();
+            });
+        });
+
+        // Allow Enter key to add the word
+        keyboardInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addWordBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

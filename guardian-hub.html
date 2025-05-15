@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-APerfectChoice-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Connect Sphere - Guardian Hub</title>
+    <style>
+        /* GLOBAL AAC STYLES (Ensure this is consistent with other screens) */
+        :root {
+            --aac-primary-bg: #FFFFFF;
+            --aac-secondary-bg: #F0F4F8;
+            --aac-border-color: #B0C4DE;
+            --aac-text-color: #1C2C40;
+            --aac-highlight-color: #4A90E2; /* Blue for general highlights */
+            --aac-highlight-text-color: #FFFFFF;
+            --aac-cell-padding: 15px;
+            --aac-cell-gap: 15px;
+            --aac-font-family: 'Arial', sans-serif;
+            --aac-button-admin-primary-bg: var(--aac-highlight-color); /* Primary action in admin */
+            --aac-button-admin-primary-hover-bg: #357ABD;
+            --aac-button-admin-secondary-bg: #6c757d; /* Grey for less prominent actions */
+            --aac-button-admin-secondary-hover-bg: #5a6268;
+            --aac-header-bg: var(--aac-primary-bg);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: var(--aac-font-family);
+            background-color: var(--aac-secondary-bg);
+            color: var(--aac-text-color);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .tablet-container-aac {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+            padding: var(--aac-cell-gap);
+        }
+
+        /* GUARDIAN HUB STYLES */
+        .guardian-hub-screen { /* This is the main container for this screen */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--aac-primary-bg);
+            border-radius: 12px; /* Consistent with other "steps" like AI gen */
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .hub-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--aac-border-color);
+            margin-bottom: 25px;
+        }
+
+        .hub-header h1 {
+            font-size: 2em;
+            color: var(--aac-text-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hub-header h1 .icon-placeholder { font-size: 1.5em; }
+
+        .back-to-main-menu-button { /* Button to go back to the initial Entry Menu */
+            background-color: #f0f0f0;
+            color: var(--aac-text-color);
+            border: 1px solid var(--aac-border-color);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-to-main-menu-button:hover {
+            background-color: #e0e0e0;
+        }
+
+
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid for buttons */
+            gap: var(--aac-cell-gap);
+            padding: var(--aac-cell-padding);
+        }
+
+        .hub-button {
+            background-color: var(--aac-secondary-bg);
+            border: 2px solid var(--aac-border-color);
+            border-radius: 12px;
+            padding: 25px 20px; /* Generous padding for large tap area */
+            display: flex;
+            flex-direction: column; /* Icon above text */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+        }
+
+        .hub-button:hover {
+            border-color: var(--aac-button-admin-primary-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.12);
+        }
+
+        .hub-button .icon-placeholder {
+            font-size: 3.5em; /* Large icons */
+            margin-bottom: 15px;
+            color: var(--aac-button-admin-primary-bg); /* Use a distinct color for icons */
+        }
+
+        .hub-button-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--aac-text-color);
+            margin-bottom: 8px;
+        }
+
+        .hub-button-description {
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        /* Specific button highlights if needed */
+        .hub-button.vocab-manage { /* Example for Vocab button */
+            /* border-left: 5px solid #FFB300; */ /* Amber accent */
+        }
+         .hub-button.ai-create .icon-placeholder { color: #E91E63; } /* Pink for AI Create */
+         .hub-button.schedule-manage .icon-placeholder { color: #00BCD4; } /* Cyan for Schedule */
+         .hub-button.user-settings .icon-placeholder { color: #9C27B0; } /* Purple for User */
+         .hub-button.app-settings .icon-placeholder { color: #795548; } /* Brown for App */
+         .hub-button.progress-report .icon-placeholder { color: #FF9800; } /* Orange for Progress Reports */
+
+
+    </style>
+</head>
+<body>
+    <!-- This div would be displayed when navigating to the Guardian Hub -->
+    <div id="guardianHubScreen" class="tablet-container-aac" style="display: flex;">
+        <div class="guardian-hub-screen">
+            <header class="hub-header">
+                <h1>
+                    <span class="icon-placeholder" role="img" aria-label="Settings Icon">🛠️</span>
+                    Guardian Hub
+                </h1>
+                <button class="back-to-main-menu-button" id="hubBackToMainMenuBtn">
+                    <span class="icon-placeholder" role="img" aria-label="Back Arrow">⬅️</span>
+                    Back to Main Menu
+                </button>
+            </header>
+
+            <main class="hub-grid">
+                <button class="hub-button vocab-manage" id="goToVocabManagementBtn">
+                    <span class="icon-placeholder" role="img" aria-label="Books and Speech Bubble">📚💬</span>
+                    <span class="hub-button-title">Vocabulary & Pictures</span>
+                    <span class="hub-button-description">Add, edit words, manage categories, and upload custom pictures.</span>
+                </button>
+
+                <button class="hub-button ai-create" id="goToAiImageCreatorBtn">
+                    <span class="icon-placeholder" role="img" aria-label="Magic Wand and Image">✨🖼️</span>
+                    <span class="hub-button-title">Create Pictures with AI</span>
+                    <span class="hub-button-description">Generate unique images for new or existing words using AI.</span>
+                </button>
+
+                <button class="hub-button schedule-manage" id="goToScheduleManagementBtn">
+                    <span class="icon-placeholder" role="img" aria-label="Calendar and Edit Pen">🗓️✏️</span>
+                    <span class="hub-button-title">Manage Schedule</span>
+                    <span class="hub-button-description">Create, edit, or delete activities in your child's daily schedule.</span>
+                </button>
+
+                <button class="hub-button user-settings" id="goToUserSettingsBtn">
+                    <span class="icon-placeholder" role="img" aria-label="User Profile and Gear">👤⚙️</span>
+                    <span class="hub-button-title">Child & User Settings</span>
+                    <span class="hub-button-description">Customize voice, grid size, and other preferences for the user.</span>
+                </button>
+
+                <button class="hub-button app-settings" id="goToAppSettingsBtn">
+                    <span class="icon-placeholder" role="img" aria-label="Application Settings">📱🔧</span>
+                    <span class="hub-button-title">App & AI Settings</span>
+                    <span class="hub-button-description">General app preferences, AI behavior, backup, and account info.</span>
+                </button>
+
+                <button class="hub-button progress-report" id="goToProgressReportBtn">
+                    <span class="icon-placeholder" role="img" aria-label="Progress Chart">📊📈</span>
+                    <span class="hub-button-title">Progress Reports</span>
+                    <span class="hub-button-description">View detailed data on usage, vocabulary growth, and communication progress.</span>
+                </button>
+
+                 <button class="hub-button" id="goToHelpSupportBtn">
+                    <span class="icon-placeholder" role="img" aria-label="Help Icon">❓🆘</span>
+                    <span class="hub-button-title">Help & Support</span>
+                    <span class="hub-button-description">Find tutorials, FAQs, and contact support if you need assistance.</span>
+                </button>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM ELEMENTS for Guardian Hub ---
+        const guardianHubScreen = document.getElementById('guardianHubScreen');
+        const hubBackToMainMenuBtn = document.getElementById('hubBackToMainMenuBtn');
+        const goToVocabManagementBtn = document.getElementById('goToVocabManagementBtn');
+        const goToAiImageCreatorBtn = document.getElementById('goToAiImageCreatorBtn');
+        const goToScheduleManagementBtn = document.getElementById('goToScheduleManagementBtn');
+        const goToUserSettingsBtn = document.getElementById('goToUserSettingsBtn');
+        const goToAppSettingsBtn = document.getElementById('goToAppSettingsBtn');
+        const goToProgressReportBtn = document.getElementById('goToProgressReportBtn');
+        const goToHelpSupportBtn = document.getElementById('goToHelpSupportBtn');
+
+
+        // --- Button Event Listeners (Placeholder Navigation) ---
+        hubBackToMainMenuBtn.addEventListener('click', () => {
+            window.location.href = "menu.html";
+        });
+
+        goToVocabManagementBtn.addEventListener('click', () => {
+            alert("Navigating to Vocabulary & Picture Management screen...");
+            // This would lead to a new screen or a section for managing vocab.
+            // For now, this might be where users can manually add/edit words
+            // or where they can link to the AI Image creation flow
+            // if they want to create an image *before* creating the word.
+        });
+
+        goToAiImageCreatorBtn.addEventListener('click', () => {
+            window.location.href = "tạo ảnh bước 1.html";
+        });
+
+        goToScheduleManagementBtn.addEventListener('click', () => {
+            alert("Navigating to Schedule Management screen (where you can ADD/EDIT schedule items)...");
+            // This would be different from the child's Schedule Display screen.
+        });
+
+        goToUserSettingsBtn.addEventListener('click', () => {
+            alert("Navigating to Child & User Settings screen...");
+        });
+
+        goToAppSettingsBtn.addEventListener('click', () => {
+            alert("Navigating to App & AI Settings screen...");
+        });
+        
+        goToProgressReportBtn.addEventListener('click', () => {
+            window.location.href = "progress-report.html";
+        });
+
+        goToHelpSupportBtn.addEventListener('click', () => {
+            alert("Opening Help & Support section...");
+        });
+
+        // To be used in a single-page app context:
+        // function showScreen(screenId) {
+        //     document.querySelectorAll('.tablet-container-aac > div, .tablet-entry-menu-container').forEach(screen => {
+        //         screen.style.display = 'none';
+        //     });
+        //     const targetScreen = document.getElementById(screenId);
+        //     if (targetScreen) {
+        //        targetScreen.style.display = targetScreen.classList.contains('guardian-hub-screen') || targetScreen.classList.contains('ai-image-creator-step') || targetScreen.classList.contains('schedule-screen-admin-edit') ? 'flex' : 'block'; // Adjust based on screen type
+        //     }
+        // }
+    </script>
+</body>
+</html>

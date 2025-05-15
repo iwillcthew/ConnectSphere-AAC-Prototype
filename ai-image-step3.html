@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-APerfectChoice-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Connect Sphere - AI Image Creator (Step 3)</title>
+    <style>
+        /* GLOBAL AAC STYLES (Ensure this is consistent with other screens) */
+        :root {
+            --aac-primary-bg: #FFFFFF;
+            --aac-secondary-bg: #F0F4F8;
+            --aac-border-color: #B0C4DE;
+            --aac-text-color: #1C2C40;
+            --aac-highlight-color: #4A90E2; /* Blue for general highlights */
+            --aac-highlight-text-color: #FFFFFF;
+            --aac-cell-padding: 15px;
+            --aac-cell-gap: 15px;
+            --aac-font-family: 'Arial', sans-serif;
+            --aac-button-action-bg: #5CB85C; /* Green for positive actions */
+            --aac-button-action-hover-bg: #4CAF50;
+            --aac-button-save-bg: var(--aac-button-action-bg);
+            --aac-button-save-hover-bg: var(--aac-button-action-hover-bg);
+            --aac-button-skip-bg: #f0f0f0;
+            --aac-button-skip-hover-bg: #e0e0e0;
+            --aac-input-bg: #FFFFFF;
+            --aac-input-border: #CCD1D9;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: var(--aac-font-family);
+            background-color: var(--aac-secondary-bg);
+            color: var(--aac-text-color);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .tablet-container-aac {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+            padding: var(--aac-cell-gap);
+        }
+
+        /* AI IMAGE CREATOR STYLES - STEP 3 */
+        .ai-image-creator-step { /* Reused */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--aac-primary-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .creator-header { /* Reused */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--aac-border-color);
+            margin-bottom: 20px;
+        }
+
+        .creator-header h1 { /* Reused */
+            font-size: 1.8em;
+            color: var(--aac-text-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .creator-header h1 .icon-placeholder { font-size: 1.5em; }
+
+        .creator-header .help-button-ai { /* Reused */
+            background-color: transparent;
+            border: none;
+            font-size: 1.8em;
+            color: var(--aac-highlight-color);
+            cursor: pointer;
+        }
+        .back-to-step2-button { /* Specific back button */
+            background-color: #f0f0f0;
+            color: var(--aac-text-color);
+            border: 1px solid var(--aac-border-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .save-link-content {
+            display: flex;
+            gap: 20px; /* Space between preview and form */
+            flex-wrap: wrap; /* Allow wrapping on smaller views */
+        }
+
+        .final-image-preview-container {
+            flex-basis: 250px; /* Suggested width for preview */
+            flex-grow: 0;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #finalPreviewImage {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border: 2px solid var(--aac-border-color);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background-color: var(--aac-secondary-bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .final-prompt-echo {
+            font-size: 0.85em;
+            color: #555;
+            text-align: center;
+            background-color: var(--aac-secondary-bg);
+            padding: 8px;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .linking-form-container {
+            flex-grow: 1;
+        }
+
+        .form-section-ai3 {
+            margin-bottom: 20px;
+        }
+        .form-section-ai3 .section-title {
+            display: block;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--aac-text-color);
+            margin-bottom: 10px;
+        }
+
+        .link-options-radio {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .link-options-radio label {
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .link-options-radio input[type="radio"] {
+            margin-right: 5px;
+            transform: scale(1.3); /* Make radio buttons slightly larger */
+        }
+
+        .form-fields-area {
+            padding: 15px;
+            background-color: var(--aac-secondary-bg);
+            border-radius: 8px;
+            border: 1px solid var(--aac-border-color);
+        }
+        .form-fields-area label {
+            display: block;
+            font-size: 1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-fields-area input[type="text"],
+        .form-fields-area select {
+            width: calc(100% - 22px); /* Account for padding */
+            padding: 12px;
+            border: 1px solid var(--aac-input-border);
+            border-radius: 6px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            background-color: var(--aac-input-bg);
+        }
+        .search-existing-word-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .search-existing-word-container input { flex-grow: 1; margin-bottom: 0;}
+        .search-existing-word-container button {
+            padding: 12px 15px;
+            background-color: var(--aac-highlight-color);
+            color: var(--aac-highlight-text-color);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        #existingWordResults {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+
+
+        .action-buttons-ai-step3 {
+            display: flex;
+            flex-direction: column; /* Stack buttons */
+            gap: 10px;
+            margin-top: auto; /* Push to bottom */
+            padding-top: 20px;
+            border-top: 1px solid var(--aac-border-color);
+        }
+
+        .save-link-button, .skip-generate-another-button {
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .save-link-button .icon-placeholder, .skip-generate-another-button .icon-placeholder { font-size: 1.2em; }
+
+
+        .save-link-button {
+            background-color: var(--aac-button-save-bg);
+            color: var(--aac-highlight-text-color);
+        }
+        .save-link-button:hover {
+            background-color: var(--aac-button-save-hover-bg);
+        }
+
+        .skip-generate-another-button {
+            background-color: var(--aac-button-skip-bg);
+            color: var(--aac-text-color);
+            border: 1px solid var(--aac-border-color);
+        }
+        .skip-generate-another-button:hover {
+            background-color: var(--aac-button-skip-hover-bg);
+        }
+
+    </style>
+</head>
+<body>
+    <div id="aiImageStep3Screen" class="tablet-container-aac" style="display: flex;">
+        <div class="ai-image-creator-step">
+            <header class="creator-header">
+                <button class="back-to-step2-button" id="aiStep3BackToStep2Btn">← Pick Different Picture</button>
+                <h1><span class="icon-placeholder">💾</span> Save Your Picture (3/3)</h1>
+                <button class="help-button-ai" aria-label="Help">❓</button>
+            </header>
+
+            <main class="save-link-content">
+                <div class="final-image-preview-container">
+                    <img id="finalPreviewImage" src="https://via.placeholder.com/250/90EE90/000000?Text=YourChosenArt" alt="Final selected AI image">
+                    <div class="final-prompt-echo">
+                        Idea: "<span id="finalPromptDisplay">Your creative idea...</span>"<br>
+                        Style: <span id="finalStyleDisplay">Default</span>
+                    </div>
+                </div>
+
+                <div class="linking-form-container">
+                    <section class="form-section-ai3">
+                        <div class="section-title">1. How to use this picture?</div>
+                        <div class="link-options-radio">
+                            <label>
+                                <input type="radio" name="linkOption" value="existing" checked>
+                                Add to an Old Word
+                            </label>
+                            <label>
+                                <input type="radio" name="linkOption" value="new">
+                                Make a New Word
+                            </label>
+                        </div>
+                    </section>
+
+                    <div id="linkToExistingWordSection" class="form-fields-area">
+                        <label for="searchExistingWord">Find an Old Word:</label>
+                        <div class="search-existing-word-container">
+                            <input type="text" id="searchExistingWord" placeholder="Type to search (e.g., apple, happy)...">
+                            <button id="searchExistingBtn">Search</button>
+                        </div>
+                        <div id="existingWordResults">
+                            <!-- Search results or selected word would appear here -->
+                            <!-- e.g., <p>Selected: <strong>Apple 🍎</strong> (Will replace its picture)</p> -->
+                        </div>
+                    </div>
+
+                    <div id="createNewWordSection" class="form-fields-area" style="display: none;">
+                        <label for="newWordLabel">New Word's Name:</label>
+                        <input type="text" id="newWordLabel" placeholder="e.g., Happy Sun, My Blue Car">
+
+                        <label for="newWordCategory">Pick a Category:</label>
+                        <select id="newWordCategory">
+                            <option value="">-- Select Category --</option>
+                            <option value="food">Food</option>
+                            <option value="actions">Actions</option>
+                            <option value="feelings">Feelings</option>
+                            <option value="people">People</option>
+                            <option value="toys">Toys</option>
+                            <option value="custom">My Custom Words</option>
+                            <!-- Categories loaded dynamically in real app -->
+                        </select>
+                    </div>
+                </div>
+            </main>
+
+            <div class="action-buttons-ai-step3">
+                <button class="save-link-button" id="saveAndLinkBtn">
+                    <span class="icon-placeholder">💾</span> Save & Use Picture
+                </button>
+                <button class="skip-generate-another-button" id="skipAndGenerateAnotherBtn">
+                    <span class="icon-placeholder">➡️</span> Make Another Picture
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM ELEMENTS for AI Image Step 3 ---
+        const aiImageStep3Screen = document.getElementById('aiImageStep3Screen');
+        const aiStep3BackToStep2Btn = document.getElementById('aiStep3BackToStep2Btn');
+        const finalPreviewImage = document.getElementById('finalPreviewImage');
+        const finalPromptDisplay = document.getElementById('finalPromptDisplay');
+        const finalStyleDisplay = document.getElementById('finalStyleDisplay');
+
+        const linkOptionRadios = document.querySelectorAll('input[name="linkOption"]');
+        const linkToExistingWordSection = document.getElementById('linkToExistingWordSection');
+        const createNewWordSection = document.getElementById('createNewWordSection');
+
+        const searchExistingWordInput = document.getElementById('searchExistingWord');
+        const searchExistingBtn = document.getElementById('searchExistingBtn');
+        const existingWordResults = document.getElementById('existingWordResults');
+
+        const newWordLabelInput = document.getElementById('newWordLabel');
+        const newWordCategorySelect = document.getElementById('newWordCategory');
+
+        const saveAndLinkBtn = document.getElementById('saveAndLinkBtn');
+        const skipAndGenerateAnotherBtn = document.getElementById('skipAndGenerateAnotherBtn');
+
+        // --- Load Data from Step 2 (localStorage) ---
+        const finalSelectedUrl = localStorage.getItem('aiImage_finalSelectedUrl') || "https://via.placeholder.com/250/90EE90/000000?Text=DefaultFinalArt";
+        const promptForFinal = localStorage.getItem('aiImage_promptForFinal') || "No prompt found";
+        const styleForFinal = localStorage.getItem('aiImage_styleForFinal') || "default";
+
+        // --- Populate Final Preview ---
+        finalPreviewImage.src = finalSelectedUrl;
+        finalPromptDisplay.textContent = promptForFinal;
+        finalStyleDisplay.textContent = styleForFinal.charAt(0).toUpperCase() + styleForFinal.slice(1);
+
+        // --- Radio Button Logic to show/hide sections ---
+        linkOptionRadios.forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                if (event.target.value === 'existing') {
+                    linkToExistingWordSection.style.display = 'block';
+                    createNewWordSection.style.display = 'none';
+                } else if (event.target.value === 'new') {
+                    linkToExistingWordSection.style.display = 'none';
+                    createNewWordSection.style.display = 'block';
+                }
+            });
+        });
+        // Trigger change once to set initial state based on 'checked'
+        document.querySelector('input[name="linkOption"]:checked').dispatchEvent(new Event('change'));
+
+
+        // --- Mock Search Existing Word ---
+        searchExistingBtn.addEventListener('click', () => {
+            const searchTerm = searchExistingWordInput.value.trim();
+            if (searchTerm) {
+                // Simulate search
+                existingWordResults.innerHTML = `<p>Searching for "${searchTerm}"...</p>`;
+                setTimeout(() => {
+                    // In a real app, you'd fetch results. Here's a mock:
+                    if (searchTerm.toLowerCase() === "apple") {
+                        existingWordResults.innerHTML = `<p>Found: <strong>Apple 🍎</strong> <button class="select-this-word-btn" data-word="Apple" data-icon="🍎">Select</button></p>`;
+                    } else if (searchTerm.toLowerCase() === "happy") {
+                        existingWordResults.innerHTML = `<p>Found: <strong>Happy 😊</strong> <button class="select-this-word-btn" data-word="Happy" data-icon="😊">Select</button></p>`;
+                    } else {
+                        existingWordResults.innerHTML = `<p>No exact match for "${searchTerm}". Try "apple" or "happy".</p>`;
+                    }
+                    // Add event listeners to dynamically created select buttons
+                    document.querySelectorAll('.select-this-word-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const selectedWord = e.target.dataset.word;
+                            existingWordResults.innerHTML = `<p>Selected for linking: <strong>${selectedWord} ${e.target.dataset.icon || ''}</strong> (Picture will be updated)</p>`;
+                            // Store this selection for when "Save & Link" is clicked
+                            localStorage.setItem('aiImage_linkToWord', selectedWord);
+                        });
+                    });
+                }, 1000);
+            } else {
+                existingWordResults.innerHTML = `<p>Please type a word to search.</p>`;
+            }
+        });
+
+
+        // --- Button Event Listeners ---
+        aiStep3BackToStep2Btn.addEventListener('click', () => {
+            alert("Going back to pick a different picture (Step 2)...");
+            window.location.href = "tạo ảnh bước 2.html";
+        });
+
+        saveAndLinkBtn.addEventListener('click', () => {
+            const linkOption = document.querySelector('input[name="linkOption"]:checked').value;
+            let finalActionDetail = "";
+
+            if (linkOption === 'existing') {
+                const wordToLink = localStorage.getItem('aiImage_linkToWord') || "an existing word (not selected)";
+                finalActionDetail = `Linked image to existing word: "${wordToLink}".`;
+                // ** REAL APP LOGIC: **
+                // 1. Get the ID/reference of the 'wordToLink'.
+                // 2. Update its image URL in your database/vocabulary store to 'finalSelectedUrl'.
+            } else if (linkOption === 'new') {
+                const newLabel = newWordLabelInput.value.trim();
+                const newCategory = newWordCategorySelect.value;
+                if (!newLabel) {
+                    alert("Please give your new word a name!");
+                    newWordLabelInput.focus();
+                    return;
+                }
+                if (!newCategory) {
+                    alert("Please pick a category for your new word!");
+                    newWordCategorySelect.focus();
+                    return;
+                }
+                finalActionDetail = `Created new word: "${newLabel}" in category "${newCategory}" with the new image.`;
+                // ** REAL APP LOGIC: **
+                // 1. Create a new vocabulary entry in your database/store with:
+                //    - label: newLabel
+                //    - image_url: finalSelectedUrl
+                //    - category: newCategory
+                //    - (any other relevant fields)
+            }
+
+            alert(`Action Complete!\n${finalActionDetail}\n\n(Image URL: ${finalSelectedUrl})\n(Prompt: ${promptForFinal})\n\nNavigating back to Admin/Settings...`);
+            // Clear localStorage for this session
+            localStorage.removeItem('aiImage_finalSelectedUrl');
+            localStorage.removeItem('aiImage_promptForFinal');
+            localStorage.removeItem('aiImage_styleForFinal');
+            localStorage.removeItem('aiImage_linkToWord'); // if used
+            // showScreen(adminMenuScreen); // In SPA
+            // window.location.href = "admin_menu.html"; // If separate files
+        });
+
+        skipAndGenerateAnotherBtn.addEventListener('click', () => {
+            alert("Okay, let's make another picture! Going back to Step 1...");
+            // Clear only the selection for this image, but keep prompt/style if user wants to tweak
+            localStorage.removeItem('aiImage_finalSelectedUrl');
+            // showScreen(aiImageStep1Screen); // In SPA
+            // window.location.href = "ai_image_step1.html"; // If separate files
+        });
+
+        // Help button functionality (placeholder)
+        document.querySelector('.help-button-ai').addEventListener('click', () => {
+            alert("Save Your Picture Help:\n\n1. Choose if you want to add this picture to an old word or make a new word.\n2. If 'Old Word', search for it and select.\n3. If 'New Word', type its name and pick a category.\n4. Tap '💾 Save & Use Picture' when you're ready!\n5. Or, tap '➡️ Make Another Picture' to start over from Step 1.");
+        });
+
+    </script>
+</body>
+</html>

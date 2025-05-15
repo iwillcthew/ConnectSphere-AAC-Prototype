@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-APerfectChoice-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Connect Sphere - AI Image Creator (Step 1)</title>
+    <style>
+        /* GLOBAL AAC STYLES (Ensure this is consistent with other screens) */
+        :root {
+            --aac-primary-bg: #FFFFFF;
+            --aac-secondary-bg: #F0F4F8;
+            --aac-border-color: #B0C4DE;
+            --aac-text-color: #1C2C40;
+            --aac-highlight-color: #4A90E2; /* Blue for general highlights */
+            --aac-highlight-text-color: #FFFFFF;
+            --aac-cell-padding: 15px;
+            --aac-cell-gap: 15px;
+            --aac-font-family: 'Arial', sans-serif;
+            --aac-button-action-bg: #5CB85C; /* Green for positive actions */
+            --aac-button-action-hover-bg: #4CAF50;
+            --aac-button-next-bg: var(--aac-highlight-color);
+            --aac-button-next-hover-bg: #357ABD;
+            --aac-input-bg: #FFFFFF;
+            --aac-input-border: #CCD1D9;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: var(--aac-font-family);
+            background-color: var(--aac-secondary-bg);
+            color: var(--aac-text-color);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .tablet-container-aac {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+            padding: var(--aac-cell-gap);
+        }
+
+        /* AI IMAGE CREATOR STYLES - STEP 1 */
+        .ai-image-creator-step {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--aac-primary-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .creator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--aac-border-color);
+            margin-bottom: 20px;
+        }
+
+        .creator-header h1 {
+            font-size: 1.8em;
+            color: var(--aac-text-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+         .creator-header h1 .icon-placeholder { font-size: 1.5em; }
+
+        .creator-header .help-button-ai {
+            background-color: transparent;
+            border: none;
+            font-size: 1.8em;
+            color: var(--aac-highlight-color);
+            cursor: pointer;
+        }
+        .back-to-admin-button { /* For navigation within admin area */
+            background-color: #f0f0f0;
+            color: var(--aac-text-color);
+            border: 1px solid var(--aac-border-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-section label, .form-section .section-title {
+            display: block;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--aac-text-color);
+            margin-bottom: 10px;
+        }
+        .form-section label .number-bubble { /* Re-styling for consistency if needed */
+            background-color: var(--aac-highlight-color);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8em;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+
+        .instruction-text-ai {
+            font-size: 1em;
+            color: #555;
+            margin-bottom: 10px;
+            background-color: var(--aac-secondary-bg);
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        #aiImagePrompt {
+            width: calc(100% - 30px); /* Full width minus padding */
+            min-height: 80px;
+            padding: 15px;
+            border: 1px solid var(--aac-input-border);
+            border-radius: 8px;
+            font-size: 1.1em;
+            resize: vertical;
+            background-color: var(--aac-input-bg);
+        }
+
+        .style-selector-ai {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .style-option-ai {
+            background-color: var(--aac-secondary-bg);
+            border: 2px solid var(--aac-border-color);
+            color: var(--aac-text-color);
+            padding: 10px 15px;
+            border-radius: 20px; /* Pill shape */
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .style-option-ai .icon-placeholder { font-size: 1.2em; }
+
+        .style-option-ai:hover {
+            border-color: var(--aac-highlight-color);
+        }
+
+        .style-option-ai.active {
+            background-color: var(--aac-highlight-color);
+            color: var(--aac-highlight-text-color);
+            font-weight: bold;
+            border-color: var(--aac-highlight-color);
+        }
+
+        .advanced-options-toggle-ai summary {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--aac-text-color);
+            cursor: pointer;
+            padding: 8px;
+            background-color: var(--aac-secondary-bg);
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+        .advanced-options-content-ai {
+            padding: 15px;
+            border: 1px solid var(--aac-border-color);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            background-color: #fafafa;
+        }
+        .advanced-options-content-ai label {font-size: 1em; margin-bottom: 5px;}
+        .advanced-options-content-ai select, .advanced-options-content-ai input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--aac-input-border);
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .action-button-container {
+            margin-top: auto; /* Push to bottom */
+            padding-top: 20px;
+            border-top: 1px solid var(--aac-border-color);
+        }
+
+        .generate-images-button {
+            background-color: var(--aac-button-next-bg);
+            color: var(--aac-highlight-text-color);
+            border: none;
+            padding: 18px 25px;
+            font-size: 1.4em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+        .generate-images-button:hover {
+            background-color: var(--aac-button-next-hover-bg);
+        }
+        .loading-indicator {
+            display: none; /* Hidden by default */
+            text-align: center;
+            font-size: 1.2em;
+            color: var(--aac-highlight-color);
+            margin-top: 15px;
+        }
+        .loading-indicator.visible {
+            display: block;
+        }
+
+
+    </style>
+</head>
+<body>
+    <!-- This div would be displayed when navigating to AI Image Generation Step 1 -->
+    <div id="aiImageStep1Screen" class="tablet-container-aac" style="display: flex;">
+        <div class="ai-image-creator-step">
+            <header class="creator-header">
+                <button class="back-to-admin-button" id="aiStep1BackToAdminBtn">← Back to Settings</button>
+                <h1><span class="icon-placeholder">🎨</span> AI Picture Maker (1/3)</h1>
+                <button class="help-button-ai" aria-label="Help">❓</button>
+            </header>
+
+            <main>
+                <section class="form-section">
+                    <label for="aiImagePrompt"><span class="number-bubble">1</span> What picture do you want?</label>
+                    <p class="instruction-text-ai">
+                        Try to be clear! For example: "a happy yellow sun wearing sunglasses" or "a fluffy white cat sleeping on a blue pillow."
+                    </p>
+                    <textarea id="aiImagePrompt" name="aiImagePrompt" rows="5" placeholder="Type your idea here..."></textarea>
+                </section>
+
+                <section class="form-section">
+                    <div class="section-title"><span class="number-bubble">2</span> Choose a Style:</div>
+                    <div class="style-selector-ai" id="aiStyleSelector">
+                        <button class="style-option-ai active" data-style="default">
+                            <span class="icon-placeholder" aria-hidden="true">✨</span> Default Magic
+                        </button>
+                        <button class="style-option-ai" data-style="cartoon">
+                            <span class="icon-placeholder" aria-hidden="true">🤪</span> Cartoon
+                        </button>
+                        <button class="style-option-ai" data-style="realistic">
+                            <span class="icon-placeholder" aria-hidden="true">📸</span> Like a Photo
+                        </button>
+                        <button class="style-option-ai" data-style="drawing">
+                            <span class="icon-placeholder" aria-hidden="true">🖍️</span> Drawing
+                        </button>
+                        <button class="style-option-ai" data-style="pixelart">
+                            <span class="icon-placeholder" aria-hidden="true">👾</span> Pixel Art
+                        </button>
+                    </div>
+                </section>
+
+                <details class="advanced-options-toggle-ai">
+                    <summary>More Choices (Optional)</summary>
+                    <div class="advanced-options-content-ai">
+                        <div>
+                            <label for="aiAspectRatio">Picture Shape:</label>
+                            <select id="aiAspectRatio" name="aiAspectRatio">
+                                <option value="square" selected>Square (Good for AAC icons)</option>
+                                <option value="portrait">Tall (Portrait)</option>
+                                <option value="landscape">Wide (Landscape)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="aiNegativePrompt">Things NOT to include (Optional):</label>
+                            <input type="text" id="aiNegativePrompt" name="aiNegativePrompt" placeholder="e.g., text, humans, blurry">
+                        </div>
+                    </div>
+                </details>
+            </main>
+
+            <div class="action-button-container">
+                 <button id="generateImagesBtn" class="generate-images-button">
+                    ✨ Make My Pictures!
+                </button>
+                <div class="loading-indicator" id="aiLoadingIndicator">
+                    <p>Magicking up your pictures... ✨ <span class="spinner"></span></p>
+                    <style> .spinner { border: 4px solid rgba(0,0,0,.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: var(--aac-highlight-color); animation: spin 1s ease infinite; display:inline-block; margin-left:10px; } @keyframes spin { to { transform: rotate(360deg); } } </style>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM ELEMENTS for AI Image Step 1 ---
+        const aiImageStep1Screen = document.getElementById('aiImageStep1Screen');
+        const aiStep1BackToAdminBtn = document.getElementById('aiStep1BackToAdminBtn');
+        const aiImagePrompt = document.getElementById('aiImagePrompt');
+        const aiStyleSelector = document.getElementById('aiStyleSelector');
+        const styleOptionsAi = document.querySelectorAll('.style-option-ai');
+        const aiAspectRatio = document.getElementById('aiAspectRatio');
+        const aiNegativePrompt = document.getElementById('aiNegativePrompt');
+        const generateImagesBtn = document.getElementById('generateImagesBtn');
+        const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
+
+        let selectedAiStyle = 'default'; // Default style
+
+        // Style Selector Logic
+        styleOptionsAi.forEach(option => {
+            option.addEventListener('click', () => {
+                styleOptionsAi.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                selectedAiStyle = option.dataset.style;
+                console.log('Selected AI Style:', selectedAiStyle);
+            });
+        });
+
+        // Generate Images Button Logic
+        generateImagesBtn.addEventListener('click', () => {
+            const prompt = aiImagePrompt.value.trim();
+            const aspectRatio = aiAspectRatio.value;
+            const negativePrompt = aiNegativePrompt.value.trim();
+
+            if (!prompt) {
+                alert("Please tell the AI what picture you want to make!");
+                aiImagePrompt.focus();
+                return;
+            }
+
+            console.log('Generating AI Images with:', {
+                prompt: prompt,
+                style: selectedAiStyle,
+                aspectRatio: aspectRatio,
+                negativePrompt: negativePrompt
+            });
+
+            // Show loading indicator
+            generateImagesBtn.style.display = 'none';
+            aiLoadingIndicator.classList.add('visible');
+
+            // ** SIMULATE AI GENERATION & NAVIGATE TO STEP 2 **
+            // In a real app, you would make an API call here.
+            // For this demo, we'll simulate a delay and then navigate.
+            setTimeout(() => {
+                // Store prompt and style for Step 2 to "echo"
+                localStorage.setItem('aiImage_prompt', prompt);
+                localStorage.setItem('aiImage_style', selectedAiStyle);
+
+                // Simulate some generated image URLs (replace with actual results later)
+                const simulatedImageUrls = [
+                    `https://via.placeholder.com/400x400/FFC0CB/000000?Text=AI_Img1_${selectedAiStyle}`,
+                    `https://via.placeholder.com/400x400/ADD8E6/000000?Text=AI_Img2_${selectedAiStyle}`,
+                    `https://via.placeholder.com/400x400/90EE90/000000?Text=AI_Img3_${selectedAiStyle}`,
+                    `https://via.placeholder.com/400x400/FFFFE0/000000?Text=AI_Img4_${selectedAiStyle}`
+                ];
+                localStorage.setItem('aiImage_generatedUrls', JSON.stringify(simulatedImageUrls));
+
+                alert("Pictures ready! Navigating to Step 2 (Review)...");
+                // Hide loading indicator and show button again (if staying on page for some reason)
+                // generateImagesBtn.style.display = 'block';
+                // aiLoadingIndicator.classList.remove('visible');
+
+                // Navigate to Step 2
+                window.location.href = "tạo ảnh bước 2.html";
+            }, 3000); // Simulate 3 seconds of generation time
+        });
+
+        aiStep1BackToAdminBtn.addEventListener('click', () => {
+            window.location.href = "Guardian Hub.html";
+        });
+
+        // Help button functionality (placeholder)
+        document.querySelector('.help-button-ai').addEventListener('click', () => {
+            alert("AI Image Creator Help:\n\n1. Describe the picture you want in the first box.\n2. Choose a style like Cartoon or Photo.\n3. Click 'Make My Pictures!' and wait for the magic!\n\nTip: Being more specific in your description usually gives better results!");
+        });
+
+    </script>
+</body>
+</html>

@@ -336,8 +336,7 @@
 
         // --- Button Event Listeners ---
         aiStep2BackToStep1Btn.addEventListener('click', () => {
-            alert("Navigating back to Step 1 (Change Idea)...");
-            window.location.href = "tạo ảnh bước 1.html";
+            window.location.href = "ai-image-step1.html";
         });
 
         regenerateOptionsBtn.addEventListener('click', () => {
@@ -370,8 +369,7 @@
             localStorage.setItem('aiImage_promptForFinal', promptFromStep1); // Carry over prompt for Step 3
             localStorage.setItem('aiImage_styleForFinal', styleFromStep1); // Carry over style for Step 3
 
-            alert(`Great choice! Navigating to Step 3 (Save & Link)...\nSelected: ${currentSelectedImageUrl}`);
-            window.location.href = "tạo ảnh bước 3.html";
+            window.location.href = "ai-image-step3.html";
         });
 
         // Help button functionality (placeholder)

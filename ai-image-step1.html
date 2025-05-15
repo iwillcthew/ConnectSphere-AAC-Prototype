@@ -370,18 +370,17 @@
                 ];
                 localStorage.setItem('aiImage_generatedUrls', JSON.stringify(simulatedImageUrls));
 
-                alert("Pictures ready! Navigating to Step 2 (Review)...");
                 // Hide loading indicator and show button again (if staying on page for some reason)
                 // generateImagesBtn.style.display = 'block';
                 // aiLoadingIndicator.classList.remove('visible');
 
                 // Navigate to Step 2
-                window.location.href = "tạo ảnh bước 2.html";
+                window.location.href = "ai-image-step2.html";
             }, 3000); // Simulate 3 seconds of generation time
         });
 
         aiStep1BackToAdminBtn.addEventListener('click', () => {
-            window.location.href = "Guardian Hub.html";
+            window.location.href = "guardian-hub.html";
         });
 
         // Help button functionality (placeholder)

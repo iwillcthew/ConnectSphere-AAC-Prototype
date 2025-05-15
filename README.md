@@ -63,6 +63,19 @@ The prototype demonstrates several AI-powered capabilities that enhance communic
 - Offers category-specific vocabulary based on conversation context
 - Adapts prediction priority based on frequently used word combinations
 
+#### How Dynamic Word Suggestions Work
+The system analyzes the words selected by the user and dynamically changes the suggestions in the following ways:
+
+1. **Initial suggestions**: When no words are selected, the system shows common starting words like "I", "Want", "Eat"
+2. **Single-word context**: After selecting a word like "I", suggestions change to show relevant follow-ups like "Want", "Need", "Like"
+3. **Two-word combinations**: When patterns like "I want" are detected, suggestions become more specific like "Food", "Drink", "Help"
+4. **Category awareness**: The system recognizes categories (e.g., Food or Animals) and suggests related vocabulary
+5. **Visual feedback**: A subtle animation and label change helps users understand why suggestions are changing
+
+Example flows:
+- "I" → [Want, Like, Need, Feel...] → "I want" → [Food, Help, Play...] → "I want food" → [More, Drink, Please...]
+- "Feel" → [Happy, Sad, Tired...] → "Feel happy" → [Because, When, Now...]
+
 ### Smart Sentence Completion
 - Analyzes partial sentences to suggest appropriate completions
 - Provides grammatically correct options to complete thoughts

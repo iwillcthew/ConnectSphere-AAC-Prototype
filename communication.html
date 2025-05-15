@@ -115,6 +115,30 @@
         }
 
         /* B. AI SUGGESTION BAR */
+        .ai-suggestion-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .ai-suggestion-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 5px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        .ai-badge {
+            background-color: var(--aac-highlight-color);
+            color: white;
+            font-size: 0.8em;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
         .ai-suggestion-bar {
             display: flex;
             gap: var(--aac-cell-gap);
@@ -123,6 +147,13 @@
             background-color: transparent;
             height: 100px;
             align-items: stretch;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .suggestions-updating {
+            background-color: rgba(74, 144, 226, 0.08);
+            box-shadow: inset 0 0 8px rgba(74, 144, 226, 0.2);
         }
 
         .suggestion-chip {
@@ -138,12 +169,18 @@
             justify-content: center;
             text-align: center;
             cursor: pointer;
-            transition: transform 0.1s ease, box-shadow 0.2s ease;
+            transition: transform 0.1s ease, box-shadow 0.2s ease, opacity 0.3s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            animation: suggestionFadeIn 0.4s ease forwards;
         }
         .suggestion-chip:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        @keyframes suggestionFadeIn {
+            0% { opacity: 0; transform: translateY(5px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .suggestion-chip img {
@@ -344,6 +381,92 @@
         .keyboard-action-btn.clear-input {
             background-color: var(--aac-button-destructive-bg);
         }
+        
+        /* Sentence Completion Dialog Styles */
+        .sentence-completion-dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .sentence-completion-content {
+            background-color: var(--aac-primary-bg);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .sentence-completion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sentence-completion-header h2 {
+            margin: 0;
+            color: var(--aac-text-color);
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sentence-completion-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .sentence-completion-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid var(--aac-highlight-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        
+        .sentence-completion-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .sentence-completion-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .sentence-completion-button-speak {
+            background-color: var(--aac-button-action-bg);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sentence-completion-button-cancel {
+            background-color: #f0f0f0;
+            color: var(--aac-text-color);
+        }
 
     </style>
 </head>
@@ -364,13 +487,36 @@
         </div>
 
         <!-- B. AI SUGGESTION BAR -->
-        <div class="ai-suggestion-bar" id="aiSuggestionBar">
-            <!-- AI Suggestion chips will be added here by JavaScript -->
+        <div class="ai-suggestion-container">
+            <div class="ai-suggestion-label">
+                <span id="aiSuggestionLabel">Try these next...</span>
+                <span class="ai-badge">AI</span>
+            </div>
+            <div class="ai-suggestion-bar" id="aiSuggestionBar">
+                <!-- AI Suggestion chips will be added here by JavaScript -->
+            </div>
         </div>
 
         <!-- C. MAIN VOCABULARY/TOPIC DISPLAY AREA -->
         <div class="main-display-area" id="mainDisplayArea">
             <!-- Topic/Word grid cells will be added here by JavaScript -->
+        </div>
+        
+        <!-- Sentence Completion Dialog -->
+        <div id="sentenceCompletionDialog" class="sentence-completion-dialog">
+            <div class="sentence-completion-content">
+                <div class="sentence-completion-header">
+                    <h2><span>✨</span> Complete Sentence</h2>
+                    <button id="closeCompletionDialog" class="sentence-completion-close">&times;</button>
+                </div>
+                <input type="text" id="completedSentenceInput" class="sentence-completion-input" placeholder="AI completed sentence...">
+                <div class="sentence-completion-buttons">
+                    <button id="cancelCompletionBtn" class="sentence-completion-button sentence-completion-button-cancel">Cancel</button>
+                    <button id="speakCompletedBtn" class="sentence-completion-button sentence-completion-button-speak">
+                        <span>🔊</span> Speak
+                    </button>
+                </div>
+            </div>
         </div>
         
         <!-- Virtual Keyboard -->
@@ -439,6 +585,13 @@
         const keyboardInput = document.getElementById('keyboardInput');
         const addWordBtn = document.getElementById('addWordBtn');
         const clearInputBtn = document.getElementById('clearInputBtn');
+        
+        // Sentence Completion Dialog Elements
+        const sentenceCompletionDialog = document.getElementById('sentenceCompletionDialog');
+        const completedSentenceInput = document.getElementById('completedSentenceInput');
+        const closeCompletionDialog = document.getElementById('closeCompletionDialog');
+        const cancelCompletionBtn = document.getElementById('cancelCompletionBtn');
+        const speakCompletedBtn = document.getElementById('speakCompletedBtn');
 
         let currentSentence = [];
 
@@ -569,13 +722,143 @@
              ]},
         ];
 
-        const mockAISuggestions = [
+        // Initial AI suggestions (shown when no words are selected)
+        const initialAISuggestions = [
+            { text: 'I', image: 'https://img.icons8.com/color/96/000000/guest-male.png' },
             { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
             { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
             { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
             { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' },
             { text: 'Yes', image: 'https://img.icons8.com/color/96/000000/checked-checkbox.png' },
             { text: 'No', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
+        ];
+        
+        // Context-aware word patterns and associations
+        const contextPatterns = {
+            // Words that might follow "I"
+            "i": [
+                { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
+                { text: 'Like', image: 'https://img.icons8.com/color/96/000000/filled-like.png' },
+                { text: 'Need', image: 'https://img.icons8.com/color/96/000000/goal.png' },
+                { text: 'Feel', image: 'https://img.icons8.com/color/96/000000/smiling-face-with-heart.png' },
+                { text: 'See', image: 'https://img.icons8.com/color/96/000000/visible.png' },
+                { text: 'Am', image: 'https://img.icons8.com/color/96/000000/questions.png' }
+            ],
+            
+            // Words that might follow "want"
+            "want": [
+                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+                { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
+                { text: 'To', image: 'https://img.icons8.com/color/96/000000/arrow.png' },
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+                { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' }
+            ],
+            
+            // Words that might follow "like"
+            "like": [
+                { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
+                { text: 'Toys', image: 'https://img.icons8.com/color/96/000000/teddy-bear.png' },
+                { text: 'Animals', image: 'https://img.icons8.com/color/96/000000/dog-paw-print.png' },
+                { text: 'Colors', image: 'https://img.icons8.com/color/96/000000/color-palette.png' },
+                { text: 'To', image: 'https://img.icons8.com/color/96/000000/arrow.png' }
+            ],
+            
+            // Words that might follow "need"
+            "need": [
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+                { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet-paper.png' },
+                { text: 'Break', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' }
+            ],
+            
+            // Words that might follow "eat"
+            "eat": [
+                { text: 'Apple', image: 'https://img.icons8.com/color/96/000000/apple.png' },
+                { text: 'Banana', image: 'https://img.icons8.com/color/96/000000/banana.png' },
+                { text: 'Cookie', image: 'https://img.icons8.com/color/96/000000/cookie.png' },
+                { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
+                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' }
+            ],
+            
+            // Words that might follow "drink"
+            "drink": [
+                { text: 'Water', image: 'https://img.icons8.com/color/96/000000/water-bottle.png' },
+                { text: 'Juice', image: 'https://img.icons8.com/color/96/000000/juice-box.png' },
+                { text: 'Milk', image: 'https://img.icons8.com/color/96/000000/milk-bottle.png' },
+                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' }
+            ],
+            
+            // Words that might follow "feel"
+            "feel": [
+                { text: 'Happy', image: 'https://img.icons8.com/color/96/000000/happy.png' },
+                { text: 'Sad', image: 'https://img.icons8.com/color/96/000000/sad.png' },
+                { text: 'Tired', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Scared', image: 'https://img.icons8.com/color/96/000000/fearful-face.png' },
+                { text: 'Angry', image: 'https://img.icons8.com/color/96/000000/angry-face.png' },
+                { text: 'Excited', image: 'https://img.icons8.com/color/96/000000/partying-face.png' }
+            ],
+            
+            // Two-word combinations
+            "i_want": [
+                { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+                { text: 'To', image: 'https://img.icons8.com/color/96/000000/arrow.png' },
+                { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' }
+            ],
+            
+            "i_need": [
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet-paper.png' },
+                { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
+                { text: 'Water', image: 'https://img.icons8.com/color/96/000000/water-bottle.png' },
+                { text: 'Break', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' }
+            ],
+            
+            "i_feel": [
+                { text: 'Happy', image: 'https://img.icons8.com/color/96/000000/happy.png' },
+                { text: 'Sad', image: 'https://img.icons8.com/color/96/000000/sad.png' },
+                { text: 'Tired', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Sick', image: 'https://img.icons8.com/color/96/000000/temperature.png' },
+                { text: 'Good', image: 'https://img.icons8.com/color/96/000000/thumb-up.png' }
+            ],
+            
+            "want_to": [
+                { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
+                { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' },
+                { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
+                { text: 'Sleep', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' }
+            ],
+            
+            // Category-based patterns
+            "food": [
+                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
+                { text: 'Please', image: 'https://img.icons8.com/color/96/000000/please.png' },
+                { text: 'Tasty', image: 'https://img.icons8.com/color/96/000000/facebook-like.png' },
+                { text: 'And', image: 'https://img.icons8.com/color/96/000000/plus-2-math.png' }
+            ],
+            
+            "animals": [
+                { text: 'Pet', image: 'https://img.icons8.com/color/96/000000/hand.png' },
+                { text: 'See', image: 'https://img.icons8.com/color/96/000000/visible.png' },
+                { text: 'Big', image: 'https://img.icons8.com/color/96/000000/resize.png' },
+                { text: 'Small', image: 'https://img.icons8.com/color/96/000000/resize-four-directions.png' },
+                { text: 'Like', image: 'https://img.icons8.com/color/96/000000/filled-like.png' }
+            ],
+        };
+        
+        // Default suggestions when context doesn't match specific patterns
+        const defaultAISuggestions = [
+            { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
+            { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+            { text: 'Like', image: 'https://img.icons8.com/color/96/000000/filled-like.png' },
+            { text: 'Not', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
+            { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
+            { text: 'Please', image: 'https://img.icons8.com/color/96/000000/please.png' }
         ];
 
         // --- FUNCTIONS ---
@@ -606,22 +889,63 @@
         function addWordToSentence(wordData) {
             currentSentence.push(wordData);
             updateSentenceDisplay();
-            updateAISuggestions();
+            
+            // Update AI suggestions with a small delay to create a visual effect
+            // that helps users notice the suggestions are changing dynamically
+            setTimeout(() => {
+                updateAISuggestions();
+            }, 100);
         }
 
-        function speakSentence() {
-            const sentenceText = currentSentence.map(item => item.text).join(' ');
+        function speakSentence(customText = null) {
+            const sentenceText = customText || currentSentence.map(item => item.text).join(' ');
             if (sentenceText.trim() === '') {
                 alert("Nothing to say yet!");
                 return;
             }
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(sentenceText);
-                speechSynthesis.speak(utterance);
-            } else {
-                alert("Sorry, your browser doesn't support speech synthesis.");
+            
+            try {
+                if ('speechSynthesis' in window) {
+                    // Cancel any ongoing speech
+                    window.speechSynthesis.cancel();
+                    
+                    // Create a new utterance
+                    const utterance = new SpeechSynthesisUtterance(sentenceText);
+                    
+                    // Set properties
+                    utterance.rate = 0.9; // Slightly slower speech rate
+                    utterance.pitch = 1.0;
+                    utterance.volume = 1.0;
+                    
+                    // Add event handlers
+                    utterance.onstart = () => console.log("Started speaking");
+                    utterance.onend = () => console.log("Finished speaking");
+                    utterance.onerror = (e) => console.error("Speech error:", e);
+                    
+                    // Speak the text
+                    window.speechSynthesis.speak(utterance);
+                    
+                    alert("Speaking: " + sentenceText); // Temporary alert to debug
+                } else {
+                    alert("Sorry, your browser doesn't support speech synthesis.");
+                }
+            } catch (error) {
+                console.error("Speech synthesis error:", error);
+                alert("There was an error with the speech system. Please try again.");
             }
+            
             console.log("Speaking:", sentenceText);
+        }
+        
+        function showSentenceCompletionDialog(suggestedText) {
+            completedSentenceInput.value = suggestedText;
+            sentenceCompletionDialog.style.display = 'flex';
+            completedSentenceInput.focus();
+            completedSentenceInput.select();
+        }
+        
+        function hideSentenceCompletionDialog() {
+            sentenceCompletionDialog.style.display = 'none';
         }
 
         function renderTopics() {
@@ -693,24 +1017,160 @@
         }
 
         function updateAISuggestions() {
+            // Briefly highlight the suggestion bar to indicate new suggestions are coming
+            aiSuggestionBar.classList.add('suggestions-updating');
+            setTimeout(() => aiSuggestionBar.classList.remove('suggestions-updating'), 300);
+            
             aiSuggestionBar.innerHTML = '';
-            mockAISuggestions.slice(0, 6).forEach(suggestion => {
+            
+            // Get context-relevant suggestions based on current sentence
+            const suggestions = getSuggestionsBasedOnContext();
+            
+            // Display the suggestions (max 6)
+            suggestions.slice(0, 6).forEach((suggestion, index) => {
                 const chip = document.createElement('div');
                 chip.classList.add('suggestion-chip');
+                
+                // Add slight delay to each suggestion for cascade effect
+                chip.style.animationDelay = `${index * 50}ms`;
+                
                 const img = document.createElement('img');
                 img.src = suggestion.image;
                 img.alt = suggestion.text;
+                
                 const span = document.createElement('span');
                 span.textContent = suggestion.text;
+                
                 chip.appendChild(img);
                 chip.appendChild(span);
                 chip.addEventListener('click', () => addWordToSentence(suggestion));
                 aiSuggestionBar.appendChild(chip);
             });
         }
+        
+        function getSuggestionsBasedOnContext() {
+            const aiSuggestionLabel = document.getElementById('aiSuggestionLabel');
+            
+            // If no words selected yet, show initial suggestions
+            if (currentSentence.length === 0) {
+                aiSuggestionLabel.textContent = "Try these words...";
+                return initialAISuggestions;
+            }
+            
+            const currentWords = currentSentence.map(item => item.text.toLowerCase());
+            const lastWord = currentWords[currentWords.length - 1];
+            
+            // Check for two-word combinations first (more specific context)
+            if (currentSentence.length >= 2) {
+                const lastTwoWords = `${currentWords[currentWords.length - 2]}_${lastWord}`;
+                
+                // Check if we have specific suggestions for this two-word combo
+                if (contextPatterns[lastTwoWords]) {
+                    aiSuggestionLabel.textContent = `After "${currentWords[currentWords.length - 2]} ${lastWord}", try...`;
+                    return contextPatterns[lastTwoWords];
+                }
+            }
+            
+            // Check for single word patterns
+            if (contextPatterns[lastWord]) {
+                aiSuggestionLabel.textContent = `After "${lastWord}", try...`;
+                return contextPatterns[lastWord];
+            }
+            
+            // Check for category-based patterns
+            const categoryMatches = checkForCategoryMatches(lastWord);
+            if (categoryMatches) {
+                aiSuggestionLabel.textContent = `Words that go with "${lastWord}"...`;
+                return categoryMatches;
+            }
+            
+            // Look for relevant topic patterns based on sentence meaning
+            if (currentWords.includes('food') || currentWords.includes('eat') || 
+                currentWords.includes('apple') || currentWords.includes('banana') || 
+                currentWords.includes('cookie')) {
+                aiSuggestionLabel.textContent = "Food-related words...";
+                return contextPatterns['food'];
+            }
+            
+            if (currentWords.includes('dog') || currentWords.includes('cat') || 
+                currentWords.includes('bird') || currentWords.includes('fish')) {
+                aiSuggestionLabel.textContent = "Animal-related words...";
+                return contextPatterns['animals'];
+            }
+            
+            // If no specific context is matched, return default suggestions
+            aiSuggestionLabel.textContent = "You might want to say...";
+            return defaultAISuggestions;
+        }
+        
+        function checkForCategoryMatches(word) {
+            // Check if the word belongs to a specific category by looking at 
+            // the mockTopics structure and return corresponding suggestions
+            
+            // Search through all topics and their words
+            for (const topic of mockTopics) {
+                if (topic.words) {
+                    // Check if the current word is in this topic
+                    const foundWord = topic.words.find(w => w.text.toLowerCase() === word);
+                    if (foundWord) {
+                        // If the topic has a matching pattern, use it
+                        if (contextPatterns[topic.id]) {
+                            return contextPatterns[topic.id];
+                        }
+                        
+                        // Otherwise try to generate relevant suggestions based on the topic
+                        switch(topic.id) {
+                            case 'feelings':
+                                // If last word was a feeling, suggest transition words
+                                return [
+                                    { text: 'Because', image: 'https://img.icons8.com/color/96/000000/why-quest.png' },
+                                    { text: 'When', image: 'https://img.icons8.com/color/96/000000/tear-off-calendar.png' },
+                                    { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' },
+                                    { text: 'Very', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+                                    { text: 'Not', image: 'https://img.icons8.com/color/96/000000/cancel.png' }
+                                ];
+                            case 'actions':
+                                // If last word was an action, suggest objects for the action
+                                return [
+                                    { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
+                                    { text: 'Toys', image: 'https://img.icons8.com/color/96/000000/teddy-bear.png' },
+                                    { text: 'Outside', image: 'https://img.icons8.com/color/96/000000/forest.png' },
+                                    { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+                                    { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' }
+                                ];
+                        }
+                    }
+                }
+            }
+            
+            return null; // No category match found
+        }
 
         // --- EVENT LISTENERS ---
-        speakBtn.addEventListener('click', speakSentence);
+        speakBtn.addEventListener('click', () => {
+            // Explicitly call the function without parameters
+            speakSentence(); 
+            console.log("Speak button clicked");
+        });
+        
+        // Sentence Completion Dialog Event Listeners
+        closeCompletionDialog.addEventListener('click', hideSentenceCompletionDialog);
+        cancelCompletionBtn.addEventListener('click', hideSentenceCompletionDialog);
+        
+        speakCompletedBtn.addEventListener('click', () => {
+            const text = completedSentenceInput.value;
+            if (text.trim()) {
+                speakSentence(text);
+            }
+            hideSentenceCompletionDialog();
+        });
+        
+        // Allow pressing Enter in the input to speak
+        completedSentenceInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                speakCompletedBtn.click();
+            }
+        });
 
         backspaceBtn.addEventListener('click', () => {
             currentSentence.pop();
@@ -729,55 +1189,41 @@
 
         completeSentenceBtn.addEventListener('click', () => {
             if (currentSentence.length > 0) {
+                let suggestedSentence = "";
+                const currentWords = currentSentence.map(item => item.text.toLowerCase());
                 const lastWordObj = currentSentence[currentSentence.length - 1];
-                let completion = [];
-
-                // Simple mock AI logic based on last word
-                if (lastWordObj.text.toLowerCase() === 'i') {
-                    completion = [{ text: 'want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' }];
+                
+                // Create intelligent sentence completions based on current words
+                if (currentWords.includes('cookie')) {
+                    // If cookie is mentioned, suggest "I want a cookie"
+                    suggestedSentence = "I want a cookie.";
+                } else if (currentWords.includes('apple')) {
+                    suggestedSentence = "I want to eat an apple.";
+                } else if (currentWords.includes('water') || currentWords.includes('juice')) {
+                    const drink = currentWords.includes('water') ? 'water' : 'juice';
+                    suggestedSentence = `I want to drink some ${drink}, please.`;
+                } else if (lastWordObj.text.toLowerCase() === 'i') {
+                    suggestedSentence = "I want something.";
                 } else if (lastWordObj.text.toLowerCase() === 'want') {
-                    completion = [
-                        { text: 'to', image: 'https://img.icons8.com/color/96/000000/text-box.png' }, // Placeholder for "to"
-                        { text: 'eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' }
-                    ];
+                    suggestedSentence = "I want help please.";
                 } else if (lastWordObj.text.toLowerCase() === 'eat') {
-                     completion = [{ text: 'apple', image: 'https://img.icons8.com/color/96/000000/apple.png' }];
-                } else if (currentSentence.some(w => w.text.toLowerCase() === 'cookie')) {
-                    // If "cookie" is anywhere, and it's the last word or a recent one.
-                    // Let's try to form "I want [a] cookie"
-                    if (!currentSentence.find(w => w.text.toLowerCase() === 'i')) {
-                         currentSentence.unshift({ text: 'I', image: 'https://img.icons8.com/color/96/000000/guest-male.png' });
+                    suggestedSentence = "I want to eat something.";
+                } else if (currentWords.includes('help')) {
+                    suggestedSentence = "I need help please.";
+                } else {
+                    // Fall back to just combining the words they've entered with some grammar fixes
+                    suggestedSentence = currentSentence.map(item => item.text).join(' ');
+                    // Add a period at the end if there isn't one
+                    if (!suggestedSentence.endsWith('.')) {
+                        suggestedSentence += '.';
                     }
-                    if (!currentSentence.find(w => w.text.toLowerCase() === 'want')) {
-                        // Find index of "I" and insert "want" after it
-                        const iIndex = currentSentence.findIndex(w => w.text.toLowerCase() === 'i');
-                        if (iIndex !== -1) {
-                            currentSentence.splice(iIndex + 1, 0, { text: 'want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' });
-                        } else { // if "I" wasn't added (e.g., sentence started with something else)
-                             currentSentence.unshift({ text: 'want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' });
-                             currentSentence.unshift({ text: 'I', image: 'https://img.icons8.com/color/96/000000/guest-male.png' });
-                        }
-                    }
-                     // Check for "a" or "the" before cookie, if not, add "a"
-                    const cookieIndex = currentSentence.findIndex(w => w.text.toLowerCase() === 'cookie');
-                    if (cookieIndex > 0) {
-                        const wordBeforeCookie = currentSentence[cookieIndex -1].text.toLowerCase();
-                        if (wordBeforeCookie !== 'a' && wordBeforeCookie !== 'the') {
-                             currentSentence.splice(cookieIndex, 0, { text: 'a', image: 'https://img.icons8.com/color/96/000000/alphabet-boy-on-a-b-c-cubes.png' }); // Placeholder for "a"
-                        }
-                    } else if (cookieIndex === 0 && currentSentence.length ===1) { // Only "cookie" in sentence
-                        currentSentence.unshift({ text: 'a', image: 'https://img.icons8.com/color/96/000000/alphabet-boy-on-a-b-c-cubes.png' });
-                        currentSentence.unshift({ text: 'want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' });
-                        currentSentence.unshift({ text: 'I', image: 'https://img.icons8.com/color/96/000000/guest-male.png' });
-                    }
-
-                } else { // Default completion if no specific logic matches
-                    completion = [{ text: 'please', image: 'https://img.icons8.com/color/96/000000/please.png' }];
+                    
+                    // Capitalize first letter
+                    suggestedSentence = suggestedSentence.charAt(0).toUpperCase() + suggestedSentence.slice(1);
                 }
-
-                completion.forEach(word => currentSentence.push(word));
-                updateSentenceDisplay();
-                updateAISuggestions();
+                
+                // Show dialog with suggested complete sentence
+                showSentenceCompletionDialog(suggestedSentence);
             } else {
                 alert("Tap a word first to complete the sentence!");
             }
@@ -806,7 +1252,7 @@
         backToMenuButton.style.zIndex = '1000';
         backToMenuButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
         backToMenuButton.addEventListener('click', function() {
-            window.location.href = 'menu.html';
+            window.location.href = 'home.html';
         });
         document.body.appendChild(backToMenuButton);
 

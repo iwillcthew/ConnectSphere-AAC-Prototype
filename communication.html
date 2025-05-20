@@ -229,11 +229,40 @@
             box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
         .grid-cell.topic-cell {
-            background-color: #D1E8FF; /* Lighter blue for topics */
+            background-color: #D1E8FF; /* Default lighter blue for topics */
         }
-         .grid-cell.topic-cell-food { background-color: #FFDEAD; } /* Navajo White for Food */
+        
+        /* Core Communication Categories */
+        .grid-cell.topic-cell-chat { background-color: #FFE4E1; } /* Misty Rose for Basic Chat */
         .grid-cell.topic-cell-actions { background-color: #90EE90; } /* Light Green for Actions */
+        .grid-cell.topic-cell-people { background-color: #D8BFD8; } /* Thistle for People */
+        .grid-cell.topic-cell-questions { background-color: #E6E6FA; } /* Lavender for Questions */
+        
+        /* Basic Needs Categories */
         .grid-cell.topic-cell-feelings { background-color: #FFB6C1; } /* Light Pink for Feelings */
+        .grid-cell.topic-cell-health { background-color: #F0E68C; } /* Khaki for Health */
+        .grid-cell.topic-cell-food { background-color: #FFDEAD; } /* Navajo White for Food */
+        .grid-cell.topic-cell-drinks { background-color: #87CEFA; } /* Light Sky Blue for Drinks */
+        .grid-cell.topic-cell-body { background-color: #FFA07A; } /* Light Salmon for Body Parts */
+        .grid-cell.topic-cell-clothes { background-color: #B0E0E6; } /* Powder Blue for Clothes */
+        
+        /* Environment Categories */
+        .grid-cell.topic-cell-places { background-color: #98FB98; } /* Pale Green for Places */
+        .grid-cell.topic-cell-time { background-color: #FAFAD2; } /* Light Goldenrod Yellow for Time */
+        .grid-cell.topic-cell-weather { background-color: #ADD8E6; } /* Light Blue for Weather */
+        .grid-cell.topic-cell-nature { background-color: #8FBC8F; } /* Dark Sea Green for Nature */
+        
+        /* Learning Categories */
+        .grid-cell.topic-cell-school { background-color: #BDB76B; } /* Dark Khaki for School */
+        .grid-cell.topic-cell-colors { background-color: #FF7F50; } /* Coral for Colors */
+        .grid-cell.topic-cell-numbers { background-color: #D3D3D3; } /* Light Grey for Numbers */
+        .grid-cell.topic-cell-shapes { background-color: #FFC0CB; } /* Pink for Shapes */
+        
+        /* Activity Categories */
+        .grid-cell.topic-cell-toys { background-color: #FFFFE0; } /* Light Yellow for Toys */
+        .grid-cell.topic-cell-activities { background-color: #DDA0DD; } /* Plum for Activities */
+        .grid-cell.topic-cell-animals { background-color: #AFEEEE; } /* Pale Turquoise for Animals */
+        .grid-cell.topic-cell-vehicles { background-color: #FFDAB9; } /* Peach Puff for Vehicles */
         .grid-cell.topic-cell-people { background-color: #FFFFE0; } /* Light Yellow for People */
         .grid-cell.topic-cell-places { background-color: #ADD8E6; } /* Light Blue for Places */
         .grid-cell.topic-cell-colors { background-color: #E6E6FA; } /* Lavender for Colors/Describe */
@@ -599,126 +628,319 @@
         // Using icons8.com "Fluent" or "Color" sets for better availability
         // Note: Real AAC apps use specialized, consistent symbol sets. These are illustrative.
         const mockTopics = [
+            // Core Communication Categories
+            { id: 'chat', name: 'Basic Chat', image: 'https://img.icons8.com/color/96/000000/speech-bubble.png', className: 'topic-cell-chat', words: [
+                { text: 'Hello', image: 'https://img.icons8.com/color/96/000000/handshake.png' },
+                { text: 'Goodbye', image: 'https://img.icons8.com/?size=100&id=d7P0zWZXi4mE&format=png&color=000000' },
+                { text: 'Yes', image: 'https://img.icons8.com/color/96/000000/checked-checkbox.png' },
+                { text: 'No', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
+                { text: 'Please', image: 'https://img.icons8.com/?size=100&id=utfNVOTLYip9&format=png&color=000000' },
+                { text: 'Thank You', image: 'https://img.icons8.com/color/96/000000/thank-you.png' },
+                { text: 'Sorry', image: 'https://img.icons8.com/color/96/000000/sad.png' },
+                { text: 'Okay', image: 'https://img.icons8.com/color/96/000000/ok.png' },
+                { text: 'Maybe', image: 'https://img.icons8.com/color/96/000000/thinking-male.png' },
+                { text: 'Welcome', image: 'https://img.icons8.com/color/96/000000/cottage.png' }
+             ]},
+             { id: 'actions', name: 'Actions', image: 'https://img.icons8.com/color/96/000000/running.png', className: 'topic-cell-actions', words: [
+                { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
+                { text: 'Need', image: 'https://img.icons8.com/color/96/000000/goal.png' },
+                { text: 'Like', image: 'https://img.icons8.com/color/96/000000/filled-like.png' },
+                { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
+                { text: 'Stop', image: 'https://img.icons8.com/color/96/000000/stop-sign.png' },
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+                { text: 'Look', image: 'https://img.icons8.com/color/96/000000/visible.png' },
+                { text: 'Listen', image: 'https://img.icons8.com/color/96/000000/listening.png' },
+                { text: 'Wait', image: 'https://img.icons8.com/?size=100&id=L1IYKiSYAO8Z&format=png&color=000000' },
+                { text: 'Read', image: 'https://img.icons8.com/color/96/000000/reading.png' },
+                { text: 'Write', image: 'https://img.icons8.com/?size=100&id=36871&format=png&color=000000' }
+            ]},
+            { id: 'people', name: 'People', image: 'https://img.icons8.com/color/96/000000/conference-call.png', className: 'topic-cell-people', words: [
+                { text: 'I / Me', image: 'https://img.icons8.com/color/96/000000/guest-male.png' },
+                { text: 'You', image: 'https://img.icons8.com/color/96/000000/pointing-at-self.png' },
+                { text: 'We', image: 'https://img.icons8.com/color/96/000000/conference-call.png' },
+                { text: 'They', image: 'https://img.icons8.com/color/96/000000/crowd.png' },
+                { text: 'Together', image: 'https://img.icons8.com/?size=100&id=108783&format=png&color=000000' },
+                { text: 'Mommy', image: 'https://img.icons8.com/color/96/000000/mother.png' },
+                { text: 'Daddy', image: 'https://img.icons8.com/color/96/000000/father.png' },
+                { text: 'Friend', image: 'https://img.icons8.com/?size=100&id=mtro6UfgvCYA&format=png&color=000000' },
+                { text: 'Family', image: 'https://img.icons8.com/color/96/000000/family.png' },
+                { text: 'Teacher', image: 'https://img.icons8.com/color/96/000000/teacher.png' },
+                { text: 'Doctor', image: 'https://img.icons8.com/color/96/000000/doctor-female.png' },
+                { text: 'Grandma', image: 'https://img.icons8.com/?size=100&id=23253&format=png&color=000000' },
+                { text: 'Grandpa', image: 'https://img.icons8.com/?size=100&id=23246&format=png&color=000000' },
+                { text: 'Brother', image: 'https://img.icons8.com/?size=100&id=rBMCO2mgsapY&format=png&color=000000' },
+                { text: 'Sister', image: 'https://img.icons8.com/?size=100&id=11Wc8hQdAsZV&format=png&color=000000' }
+            ]},
+            { id: 'questions', name: 'Questions', image: 'https://img.icons8.com/color/96/000000/ask-question.png', className: 'topic-cell-questions', words: [
+                { text: 'What?', image: 'https://img.icons8.com/color/96/000000/thinking-bubble.png' },
+                { text: 'Where?', image: 'https://img.icons8.com/color/96/000000/place-marker.png' },
+                { text: 'When?', image: 'https://img.icons8.com/color/96/000000/tear-off-calendar.png' },
+                { text: 'Who?', image: 'https://img.icons8.com/color/96/000000/who.png' },
+                { text: 'Why?', image: 'https://img.icons8.com/color/96/000000/why-quest.png' },
+                { text: 'How?', image: 'https://img.icons8.com/color/96/000000/wrench.png' },
+                { text: 'Which?', image: 'https://img.icons8.com/color/96/000000/waypoint-map.png' },
+                { text: 'Can I?', image: 'https://img.icons8.com/color/96/000000/checked--v1.png' },
+                { text: 'Help me?', image: 'https://img.icons8.com/color/96/000000/help--v1.png' }
+             ]},
+            
+            // Basic Needs Categories
+            { id: 'feelings', name: 'Feelings', image: 'https://img.icons8.com/color/96/000000/smiling-face-with-heart.png', className: 'topic-cell-feelings', words: [
+                { text: 'Happy', image: 'https://img.icons8.com/color/96/000000/happy.png' },
+                { text: 'Sad', image: 'https://img.icons8.com/color/96/000000/sad.png' },
+                { text: 'Tired', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Angry', image: 'https://img.icons8.com/?size=100&id=63225&format=png&color=000000' },
+                { text: 'Scared', image: 'https://img.icons8.com/?size=100&id=CZwsXFk4zfGo&format=png&color=000000' },
+                { text: 'Excited', image: 'https://img.icons8.com/?size=100&id=3sQY8JkktfnK&format=png&color=000000' },
+                { text: 'Sick', image: 'https://img.icons8.com/?size=100&id=doAVsmyCwyCT&format=png&color=000000' },
+                { text: 'Hurt', image: 'https://img.icons8.com/color/96/000000/bandage.png' },
+                { text: 'Confused', image: 'https://img.icons8.com/color/96/000000/confused.png' },
+                { text: 'Bored', image: 'https://img.icons8.com/color/96/000000/bored.png' },
+                { text: 'Good', image: 'https://img.icons8.com/color/96/000000/thumb-up.png' },
+                { text: 'Bad', image: 'https://img.icons8.com/color/96/000000/thumbs-down.png' }
+            ]},
+            { id: 'health', name: 'Health', image: 'https://img.icons8.com/color/96/000000/heart-health.png', className: 'topic-cell-health', words: [
+                { text: 'Pain', image: 'https://img.icons8.com/?size=100&id=v5KIlsRVujYc&format=png&color=000000' },
+                { text: 'Medicine', image: 'https://img.icons8.com/color/96/000000/pills.png' },
+                { text: 'Doctor', image: 'https://img.icons8.com/color/96/000000/doctor-male.png' },
+                { text: 'Hospital', image: 'https://img.icons8.com/color/96/000000/hospital-3.png' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet.png' },
+                { text: 'Sick', image: 'https://img.icons8.com/?size=100&id=doAVsmyCwyCT&format=png&color=000000' },
+                { text: 'Better', image: 'https://img.icons8.com/color/96/000000/thumb-up.png' },
+                { text: 'Worse', image: 'https://img.icons8.com/color/96/000000/thumbs-down.png' },
+                { text: 'Sleep', image: 'https://img.icons8.com/color/96/000000/sleeping.png' },
+                { text: 'Rest', image: 'https://img.icons8.com/color/96/000000/relax.png' }
+            ]},
             { id: 'food', name: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png', className: 'topic-cell-food', words: [
                 { text: 'Apple', image: 'https://img.icons8.com/color/96/000000/apple.png' },
                 { text: 'Banana', image: 'https://img.icons8.com/color/96/000000/banana.png' },
                 { text: 'Cookie', image: 'https://img.icons8.com/color/96/000000/cookie.png' },
                 { text: 'Water', image: 'https://img.icons8.com/color/96/000000/water-bottle.png' },
                 { text: 'Milk', image: 'https://img.icons8.com/color/96/000000/milk-bottle.png' },
-                { text: 'Juice', image: 'https://img.icons8.com/color/96/000000/juice-box.png' },
+                { text: 'Juice', image: 'https://img.icons8.com/?size=100&id=tZx3c5B2wV4b&format=png&color=000000' },
                 { text: 'Bread', image: 'https://img.icons8.com/color/96/000000/bread.png' },
                 { text: 'Cheese', image: 'https://img.icons8.com/color/96/000000/cheese.png' },
+                { text: 'Pizza', image: 'https://img.icons8.com/color/96/000000/pizza.png' },
+                { text: 'Chicken', image: 'https://img.icons8.com/color/96/000000/chicken.png' },
+                { text: 'Ice Cream', image: 'https://img.icons8.com/color/96/000000/ice-cream-cone.png' },
+                { text: 'Sandwich', image: 'https://img.icons8.com/color/96/000000/sandwich.png' },
+                { text: 'Hot Dog', image: 'https://img.icons8.com/color/96/000000/hot-dog.png' },
+                { text: 'Fruit', image: 'https://img.icons8.com/color/96/000000/group-of-fruits.png' },
+                { text: 'Vegetable', image: 'https://img.icons8.com/?size=100&id=cpa3RyNsYJkU&format=png&color=000000' }
             ]},
-            { id: 'actions', name: 'Actions', image: 'https://img.icons8.com/color/96/000000/running.png', className: 'topic-cell-actions', words: [
-                { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
-                { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' }, // Changed from eating person
-                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' }, // Changed
-                { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' }, // Kept
-                { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' }, // Changed
-                { text: 'Stop', image: 'https://img.icons8.com/color/96/000000/stop-sign.png' },
-                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
-                { text: 'Look', image: 'https://img.icons8.com/color/96/000000/visible.png' },
-                { text: 'Listen', image: 'https://img.icons8.com/color/96/000000/listening.png' },
+            { id: 'drinks', name: 'Drinks', image: 'https://img.icons8.com/color/96/000000/milkshake.png', className: 'topic-cell-drinks', words: [
+                { text: 'Water', image: 'https://img.icons8.com/color/96/000000/water-bottle.png' },
+                { text: 'Milk', image: 'https://img.icons8.com/color/96/000000/milk-bottle.png' },
+                { text: 'Juice', image: 'https://img.icons8.com/?size=100&id=tZx3c5B2wV4b&format=png&color=000000' },
+                { text: 'Soda', image: 'https://img.icons8.com/color/96/000000/cola.png' },
+                { text: 'Coffee', image: 'https://img.icons8.com/color/96/000000/coffee.png' },
+                { text: 'Tea', image: 'https://img.icons8.com/color/96/000000/tea.png' },
+                { text: 'Hot Chocolate', image: 'https://img.icons8.com/color/96/000000/hot-chocolate.png' },
+                { text: 'Smoothie', image: 'https://img.icons8.com/color/96/000000/milkshake.png' }
             ]},
-            { id: 'feelings', name: 'Feelings', image: 'https://img.icons8.com/color/96/000000/smiling-face-with-heart.png', className: 'topic-cell-feelings', words: [
-                { text: 'Happy', image: 'https://img.icons8.com/color/96/000000/happy.png' },
-                { text: 'Sad', image: 'https://img.icons8.com/color/96/000000/sad.png' },
-                { text: 'Tired', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
-                { text: 'Angry', image: 'https://img.icons8.com/color/96/000000/angry-face.png' }, // Changed
-                { text: 'Scared', image: 'https://img.icons8.com/color/96/000000/fearful-face.png' },
-                { text: 'Excited', image: 'https://img.icons8.com/color/96/000000/partying-face.png' },
-            ]},
-            { id: 'people', name: 'People', image: 'https://img.icons8.com/color/96/000000/conference-call.png', className: 'topic-cell-people', words: [
-                { text: 'I / Me', image: 'https://img.icons8.com/color/96/000000/guest-male.png' },
-                { text: 'You', image: 'https://img.icons8.com/color/96/000000/pointing-at-self.png' }, // Changed to pointing at viewer
-                { text: 'Mommy', image: 'https://img.icons8.com/color/96/000000/mother.png' },
-                { text: 'Daddy', image: 'https://img.icons8.com/color/96/000000/father.png' },
-                { text: 'Friend', image: 'https://img.icons8.com/color/96/000000/friends.png' },
-                { text: 'Teacher', image: 'https://img.icons8.com/color/96/000000/teacher.png' },
-            ]},
-            { id: 'places', name: 'Places', image: 'https://img.icons8.com/color/96/000000/location-pin.png', className: 'topic-cell-places', words: [
-                 { text: 'Home', image: 'https://img.icons8.com/color/96/000000/home.png' },
-                 { text: 'School', image: 'https://img.icons8.com/color/96/000000/school-building.png' }, // Changed
-                 { text: 'Park', image: 'https://img.icons8.com/color/96/000000/park-with-street-light.png' }, // Changed
-                 { text: 'Store', image: 'https://img.icons8.com/color/96/000000/shop.png' },
-                 { text: 'Outside', image: 'https://img.icons8.com/color/96/000000/forest.png' },
-            ]},
-            { id: 'colors', name: 'Colors', image: 'https://img.icons8.com/color/96/000000/color-palette.png', className: 'topic-cell-colors', words: [
-                { text: 'Red', image: 'https://img.icons8.com/fluency/96/stop-sign.png' }, // Using stop sign for red
-                { text: 'Blue', image: 'https://img.icons8.com/fluency/96/ocean-wave.png' }, // Using wave for blue
-                { text: 'Green', image: 'https://img.icons8.com/fluency/96/clover.png' }, // Using clover for green
-                { text: 'Yellow', image: 'https://img.icons8.com/fluency/96/sun.png' },
-                { text: 'Black', image: 'https://img.icons8.com/fluency/96/night.png' },
-                { text: 'White', image: 'https://img.icons8.com/fluency/96/cloud.png' },
-             ]},
-             { id: 'toys', name: 'Toys', image: 'https://img.icons8.com/color/96/000000/teddy-bear.png', className: 'topic-cell-toys', words: [
-                { text: 'Ball', image: 'https://img.icons8.com/color/96/000000/empty-trash.png' }, // Replaced with beach ball (was trash)
-                { text: 'Car', image: 'https://img.icons8.com/color/96/000000/car.png' },
-                { text: 'Doll', image: 'https://img.icons8.com/color/96/000000/barbie-doll.png' },
-                { text: 'Blocks', image: 'https://img.icons8.com/color/96/000000/lego.png' },
-             ]},
-             { id: 'animals', name: 'Animals', image: 'https://img.icons8.com/color/96/000000/dog-paw-print.png', className: 'topic-cell-animals', words: [
-                { text: 'Dog', image: 'https://img.icons8.com/color/96/000000/dog.png' },
-                { text: 'Cat', image: 'https://img.icons8.com/color/96/000000/cat.png' },
-                { text: 'Bird', image: 'https://img.icons8.com/color/96/000000/bird.png' },
-                { text: 'Fish', image: 'https://img.icons8.com/color/96/000000/fish-food.png' }, // Fish icon
-             ]},
-             { id: 'numbers', name: 'Numbers', image: 'https://img.icons8.com/color/96/000000/123.png', className: 'topic-cell-numbers', words: [
-                { text: 'One', image: 'https://img.icons8.com/color/96/000000/1-c.png' },
-                { text: 'Two', image: 'https://img.icons8.com/color/96/000000/2-c.png' },
-                { text: 'Three', image: 'https://img.icons8.com/color/96/000000/3-c.png' },
-                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
-             ]},
-             { id: 'questions', name: 'Questions', image: 'https://img.icons8.com/color/96/000000/ask-question.png', className: 'topic-cell-questions', words: [
-                { text: 'What?', image: 'https://img.icons8.com/color/96/000000/thinking-bubble.png' },
-                { text: 'Where?', image: 'https://img.icons8.com/color/96/000000/place-marker.png' },
-                { text: 'When?', image: 'https://img.icons8.com/color/96/000000/tear-off-calendar.png' },
-                { text: 'Who?', image: 'https://img.icons8.com/color/96/000000/who.png' }, // "Who" icon
-                { text: 'Why?', image: 'https://img.icons8.com/color/96/000000/why-quest.png' }, // "Why" icon
-             ]},
-             { id: 'time', name: 'Time', image: 'https://img.icons8.com/color/96/000000/time.png', className: 'topic-cell-time', words: [
-                { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' },
-                { text: 'Later', image: 'https://img.icons8.com/color/96/000000/sand-watch.png' },
-                { text: 'Today', image: 'https://img.icons8.com/color/96/000000/today.png' },
-                { text: 'Tomorrow', image: 'https://img.icons8.com/color/96/000000/tomorrow.png' },
-             ]},
-             { id: 'chat', name: 'Chat', image: 'https://img.icons8.com/color/96/000000/speech-bubble.png', className: 'topic-cell-chat', words: [
-                { text: 'Yes', image: 'https://img.icons8.com/color/96/000000/checked-checkbox.png' },
-                { text: 'No', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
-                { text: 'Please', image: 'https://img.icons8.com/color/96/000000/please.png' }, // "Please" icon
-                { text: 'Thank You', image: 'https://img.icons8.com/color/96/000000/thank-you.png' }, // "Thank You" icon
-                { text: 'Hello', image: 'https://img.icons8.com/color/96/000000/handshake.png' },
-                { text: 'Goodbye', image: 'https://img.icons8.com/color/96/000000/waving-hand-emoji.png' },
-             ]},
-             { id: 'school', name: 'School', image: 'https://img.icons8.com/color/96/000000/school.png', className: 'topic-cell-school', words: [
-                { text: 'Book', image: 'https://img.icons8.com/color/96/000000/book.png'},
-                { text: 'Pen', image: 'https://img.icons8.com/color/96/000000/ballpoint-pen.png'},
-                { text: 'Read', image: 'https://img.icons8.com/color/96/000000/reading.png'},
-                { text: 'Write', image: 'https://img.icons8.com/color/96/000000/writing-implement.png'},
-             ]},
-             { id: 'clothes', name: 'Clothes', image: 'https://img.icons8.com/color/96/000000/clothes.png', className: 'topic-cell-clothes', words: [
-                { text: 'Shirt', image: 'https://img.icons8.com/color/96/000000/shirt.png'},
-                { text: 'Pants', image: 'https://img.icons8.com/color/96/000000/trousers.png'},
-                { text: 'Shoes', image: 'https://img.icons8.com/color/96/000000/trainers.png'},
-                { text: 'Hat', image: 'https://img.icons8.com/color/96/000000/sun-hat.png'},
-             ]},
-             { id: 'body', name: 'Body Parts', image: 'https://img.icons8.com/color/96/000000/torso.png', className: 'topic-cell-body', words: [
+            { id: 'body', name: 'Body Parts', image: 'https://img.icons8.com/color/96/000000/torso.png', className: 'topic-cell-body', words: [
                 { text: 'Head', image: 'https://img.icons8.com/color/96/000000/head-profile.png'},
                 { text: 'Hands', image: 'https://img.icons8.com/color/96/000000/hand.png'},
                 { text: 'Feet', image: 'https://img.icons8.com/color/96/000000/footprint.png'},
                 { text: 'Eyes', image: 'https://img.icons8.com/color/96/000000/visible.png'},
+                { text: 'Ears', image: 'https://img.icons8.com/color/96/000000/ear.png'},
+                { text: 'Mouth', image: 'https://img.icons8.com/color/96/000000/lips.png'},
+                { text: 'Nose', image: 'https://img.icons8.com/color/96/000000/nose.png'},
+                { text: 'Arm', image: 'https://img.icons8.com/color/96/000000/arm.png'},
+                { text: 'Leg', image: 'https://img.icons8.com/color/96/000000/leg.png'},
+                { text: 'Back', image: 'https://img.icons8.com/color/96/000000/back-pain.png'},
+                { text: 'Stomach', image: 'https://img.icons8.com/color/96/000000/stomach.png'},
+                { text: 'Heart', image: 'https://img.icons8.com/color/96/000000/heart.png'}
+             ]},
+            { id: 'clothes', name: 'Clothes', image: 'https://img.icons8.com/color/96/000000/clothes.png', className: 'topic-cell-clothes', words: [
+                { text: 'Shirt', image: 'https://img.icons8.com/color/96/000000/shirt.png'},
+                { text: 'Pants', image: 'https://img.icons8.com/color/96/000000/trousers.png'},
+                { text: 'Shoes', image: 'https://img.icons8.com/color/96/000000/trainers.png'},
+                { text: 'Hat', image: 'https://img.icons8.com/color/96/000000/winter-hat.png'},
+                { text: 'Socks', image: 'https://img.icons8.com/color/96/000000/socks.png'},
+                { text: 'Jacket', image: 'https://img.icons8.com/color/96/000000/jacket.png'},
+                { text: 'Dress', image: 'https://img.icons8.com/color/96/000000/dress.png'},
+                { text: 'Sweater', image: 'https://img.icons8.com/color/96/000000/jumper.png'},
+                { text: 'Coat', image: 'https://img.icons8.com/color/96/000000/coat.png'},
+                { text: 'Glasses', image: 'https://img.icons8.com/color/96/000000/glasses.png'}
+             ]},
+
+            // Environment Categories
+            { id: 'places', name: 'Places', image: 'https://img.icons8.com/?size=100&id=vb6KFQas4NTc&format=png&color=000000', className: 'topic-cell-places', words: [
+                { text: 'Home', image: 'https://img.icons8.com/color/96/000000/home.png' },
+                { text: 'School', image: 'https://img.icons8.com/color/96/000000/school-building.png' },
+                { text: 'Park', image: 'https://img.icons8.com/color/96/000000/park-with-street-light.png' },
+                { text: 'Store', image: 'https://img.icons8.com/color/96/000000/shop.png' },
+                { text: 'Hospital', image: 'https://img.icons8.com/color/96/000000/hospital-2.png' },
+                { text: 'Restaurant', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/bath.png' },
+                { text: 'Bedroom', image: 'https://img.icons8.com/color/96/000000/bedroom.png' },
+                { text: 'Kitchen', image: 'https://img.icons8.com/color/96/000000/kitchen.png' },
+                { text: 'Library', image: 'https://img.icons8.com/color/96/000000/library.png' },
+                { text: 'Outside', image: 'https://img.icons8.com/color/96/000000/forest.png' },
+                { text: 'Inside', image: 'https://img.icons8.com/color/96/000000/living-room.png' },
+                { text: 'Playground', image: 'https://img.icons8.com/color/96/000000/playground.png' },
+                { text: 'Beach', image: 'https://img.icons8.com/color/96/000000/beach.png' }
+            ]},
+            { id: 'time', name: 'Time', image: 'https://img.icons8.com/color/96/000000/time.png', className: 'topic-cell-time', words: [
+                { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' },
+                { text: 'Later', image: 'https://img.icons8.com/color/96/000000/sand-watch.png' },
+                { text: 'Today', image: 'https://img.icons8.com/color/96/000000/today.png' },
+                { text: 'Tomorrow', image: 'https://img.icons8.com/color/96/000000/tomorrow.png' },
+                { text: 'Morning', image: 'https://img.icons8.com/color/96/000000/sunrise.png' },
+                { text: 'Afternoon', image: 'https://img.icons8.com/color/96/000000/sun.png' },
+                { text: 'Evening', image: 'https://img.icons8.com/color/96/000000/sunset.png' },
+                { text: 'Night', image: 'https://img.icons8.com/color/96/000000/night.png' },
+                { text: 'Soon', image: 'https://img.icons8.com/color/96/000000/running.png' },
+                { text: 'Wait', image: 'https://img.icons8.com/color/96/000000/clock.png' },
+                { text: 'After', image: 'https://img.icons8.com/color/96/000000/arrow.png' },
+                { text: 'Before', image: 'https://img.icons8.com/color/96/000000/previous.png' }
+             ]},
+             { id: 'weather', name: 'Weather', image: 'https://img.icons8.com/color/96/000000/partly-cloudy-day.png', className: 'topic-cell-weather', words: [
+                { text: 'Sunny', image: 'https://img.icons8.com/color/96/000000/summer.png' },
+                { text: 'Rainy', image: 'https://img.icons8.com/color/96/000000/rain.png' },
+                { text: 'Cloudy', image: 'https://img.icons8.com/color/96/000000/clouds.png' },
+                { text: 'Snowy', image: 'https://img.icons8.com/color/96/000000/snow.png' },
+                { text: 'Windy', image: 'https://img.icons8.com/color/96/000000/wind.png' },
+                { text: 'Hot', image: 'https://img.icons8.com/color/96/000000/temperature-hot.png' },
+                { text: 'Cold', image: 'https://img.icons8.com/color/96/000000/temperature-cold.png' },
+                { text: 'Stormy', image: 'https://img.icons8.com/color/96/000000/storm.png' }
              ]},
              { id: 'nature', name: 'Nature', image: 'https://img.icons8.com/color/96/000000/deciduous-tree.png', className: 'topic-cell-nature', words: [
                 { text: 'Tree', image: 'https://img.icons8.com/color/96/000000/deciduous-tree.png'},
                 { text: 'Flower', image: 'https://img.icons8.com/color/96/000000/flower.png'},
                 { text: 'Sun', image: 'https://img.icons8.com/color/96/000000/sun.png'},
                 { text: 'Moon', image: 'https://img.icons8.com/color/96/000000/bright-moon.png'},
+                { text: 'Sky', image: 'https://img.icons8.com/color/96/000000/sky.png' },
+                { text: 'Water', image: 'https://img.icons8.com/color/96/000000/water.png' },
+                { text: 'Grass', image: 'https://img.icons8.com/color/96/000000/grass.png' },
+                { text: 'Leaf', image: 'https://img.icons8.com/color/96/000000/leaf.png' },
+                { text: 'Rock', image: 'https://img.icons8.com/color/96/000000/rock.png' },
+                { text: 'Mountain', image: 'https://img.icons8.com/color/96/000000/mountain.png' },
+                { text: 'River', image: 'https://img.icons8.com/color/96/000000/river.png' },
+                { text: 'Beach', image: 'https://img.icons8.com/color/96/000000/beach.png' }
+             ]},
+
+            // Learning Categories
+            { id: 'school', name: 'School', image: 'https://img.icons8.com/color/96/000000/school.png', className: 'topic-cell-school', words: [
+                { text: 'Book', image: 'https://img.icons8.com/color/96/000000/book.png'},
+                { text: 'Pen', image: 'https://img.icons8.com/color/96/000000/ballpoint-pen.png'},
+                { text: 'Read', image: 'https://img.icons8.com/color/96/000000/reading.png'},
+                { text: 'Write', image: 'https://img.icons8.com/color/96/000000/writing-implement.png'},
+                { text: 'Pencil', image: 'https://img.icons8.com/color/96/000000/pencil.png' },
+                { text: 'Paper', image: 'https://img.icons8.com/color/96/000000/paper.png' },
+                { text: 'Desk', image: 'https://img.icons8.com/color/96/000000/desk.png' },
+                { text: 'Chair', image: 'https://img.icons8.com/color/96/000000/chair.png' },
+                { text: 'Backpack', image: 'https://img.icons8.com/color/96/000000/backpack.png' },
+                { text: 'Teacher', image: 'https://img.icons8.com/color/96/000000/teacher.png' },
+                { text: 'Class', image: 'https://img.icons8.com/color/96/000000/classroom.png' },
+                { text: 'Learn', image: 'https://img.icons8.com/color/96/000000/learning.png' },
+                { text: 'Math', image: 'https://img.icons8.com/color/96/000000/math.png' },
+                { text: 'Art', image: 'https://img.icons8.com/color/96/000000/paint-palette.png' },
+                { text: 'Music', image: 'https://img.icons8.com/color/96/000000/musical-notes.png' }
+             ]},
+             { id: 'colors', name: 'Colors', image: 'https://img.icons8.com/color/96/000000/color-palette.png', className: 'topic-cell-colors', words: [
+                { text: 'Red', image: 'https://img.icons8.com/fluency/96/stop-sign.png' },
+                { text: 'Blue', image: 'https://img.icons8.com/?size=100&id=vBRvJEJ4dJMI&format=png&color=000000' },
+                { text: 'Green', image: 'https://img.icons8.com/fluency/96/clover.png' },
+                { text: 'Yellow', image: 'https://img.icons8.com/fluency/96/sun.png' },
+                { text: 'Orange', image: 'https://img.icons8.com/color/96/000000/orange.png' },
+                { text: 'Purple', image: 'https://img.icons8.com/color/96/000000/eggplant.png' },
+                { text: 'Pink', image: 'https://img.icons8.com/color/96/000000/cherry-blossom.png' },
+                { text: 'Brown', image: 'https://img.icons8.com/color/96/000000/wooden-log.png' },
+                { text: 'Black', image: 'https://img.icons8.com/fluency/96/night.png' },
+                { text: 'White', image: 'https://img.icons8.com/?size=100&id=isuU3TxRtY1f&format=png&color=000000' },
+                { text: 'Gray', image: 'https://img.icons8.com/color/96/000000/cloud.png' },
+                { text: 'Rainbow', image: 'https://img.icons8.com/color/96/000000/rainbow.png' }
+             ]},
+             { id: 'numbers', name: 'Numbers', image: 'https://img.icons8.com/color/96/000000/123.png', className: 'topic-cell-numbers', words: [
+                { text: 'One', image: 'https://img.icons8.com/color/96/000000/1-c.png' },
+                { text: 'Two', image: 'https://img.icons8.com/color/96/000000/2-c.png' },
+                { text: 'Three', image: 'https://img.icons8.com/color/96/000000/3-c.png' },
+                { text: 'Four', image: 'https://img.icons8.com/color/96/000000/4-c.png' },
+                { text: 'Five', image: 'https://img.icons8.com/color/96/000000/5-c.png' },
+                { text: 'Six', image: 'https://img.icons8.com/color/96/000000/6-c.png' }, 
+                { text: 'Seven', image: 'https://img.icons8.com/color/96/000000/7-c.png' },
+                { text: 'Eight', image: 'https://img.icons8.com/color/96/000000/8-c.png' },
+                { text: 'Nine', image: 'https://img.icons8.com/color/96/000000/9-c.png' },
+                { text: 'Ten', image: 'https://img.icons8.com/?size=100&id=K2tDfCBeUCPR&format=png&color=000000' },
+                { text: 'Zero', image: 'https://img.icons8.com/color/96/000000/0-c.png' }, 
+                { text: 'Many', image: 'https://img.icons8.com/color/96/000000/crowd.png' },
+                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+                { text: 'Less', image: 'https://img.icons8.com/color/96/000000/minus.png' }
+             ]},
+             { id: 'shapes', name: 'Shapes', image: 'https://img.icons8.com/?size=100&id=VynYCtkEcCFE&format=png&color=000000', className: 'topic-cell-shapes', words: [
+                { text: 'Circle', image: 'https://img.icons8.com/color/96/000000/circle.png' },
+                { text: 'Square', image: 'https://img.icons8.com/color/96/000000/square.png' }, 
+                { text: 'Triangle', image: 'https://img.icons8.com/color/96/000000/triangle.png' },
+                { text: 'Rectangle', image: 'https://img.icons8.com/color/96/000000/rectangle.png' },
+                { text: 'Star', image: 'https://img.icons8.com/color/96/000000/star.png' },
+                { text: 'Heart', image: 'https://img.icons8.com/color/96/000000/heart.png' },
+                { text: 'Diamond', image: 'https://img.icons8.com/color/96/000000/diamond-shape.png' },
+                { text: 'Oval', image: 'https://img.icons8.com/color/96/000000/oval.png' }
+             ]},
+
+            // Activity Categories  
+            { id: 'toys', name: 'Toys', image: 'https://img.icons8.com/color/96/000000/teddy-bear.png', className: 'topic-cell-toys', words: [
+                { text: 'Ball', image: 'https://img.icons8.com/color/96/000000/football2.png' },
+                { text: 'Doll', image: 'https://img.icons8.com/color/96/000000/human-doll.png' },
+                { text: 'Blocks', image: 'https://img.icons8.com/color/96/000000/lego.png' },
+                { text: 'Bear', image: 'https://img.icons8.com/color/96/000000/teddy-bear.png' },
+                { text: 'Car', image: 'https://img.icons8.com/color/96/000000/car.png' },
+                { text: 'Book', image: 'https://img.icons8.com/color/96/000000/book.png' },
+                { text: 'Game', image: 'https://img.icons8.com/color/96/000000/controller.png' },
+                { text: 'Puzzle', image: 'https://img.icons8.com/color/96/000000/puzzle.png' },
+                { text: 'Paint', image: 'https://img.icons8.com/color/96/000000/paint.png' },
+                { text: 'Clay', image: 'https://img.icons8.com/color/96/000000/clay.png' },
+                { text: 'Bike', image: 'https://img.icons8.com/color/96/000000/bicycle.png' },
+                { text: 'Bubbles', image: 'https://img.icons8.com/color/96/000000/soap-bubbles.png' }
+             ]},
+             { id: 'activities', name: 'Activities', image: 'https://img.icons8.com/color/96/000000/sports.png', className: 'topic-cell-activities', words: [
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Draw', image: 'https://img.icons8.com/color/96/000000/drawing.png' },
+                { text: 'Paint', image: 'https://img.icons8.com/color/96/000000/paint.png' },
+                { text: 'Read', image: 'https://img.icons8.com/color/96/000000/reading.png' },
+                { text: 'Write', image: 'https://img.icons8.com/color/96/000000/writing-implement.png' },
+                { text: 'Sing', image: 'https://img.icons8.com/color/96/000000/micro.png' },
+                { text: 'Dance', image: 'https://img.icons8.com/color/96/000000/dancing.png' },
+                { text: 'Run', image: 'https://img.icons8.com/color/96/000000/running.png' },
+                { text: 'Jump', image: 'https://img.icons8.com/color/96/000000/high-jump.png' },
+                { text: 'Swim', image: 'https://img.icons8.com/color/96/000000/swimming.png' },
+                { text: 'Climb', image: 'https://img.icons8.com/color/96/000000/climbing.png' },
+                { text: 'Ride', image: 'https://img.icons8.com/color/96/000000/cycling-road.png' }
+             ]},
+             { id: 'animals', name: 'Animals', image: 'https://img.icons8.com/color/96/000000/dog-paw-print.png', className: 'topic-cell-animals', words: [
+                { text: 'Dog', image: 'https://img.icons8.com/color/96/000000/dog.png' },
+                { text: 'Cat', image: 'https://img.icons8.com/color/96/000000/cat.png' },
+                { text: 'Bird', image: 'https://img.icons8.com/color/96/000000/bird.png' },
+                { text: 'Fish', image: 'https://img.icons8.com/color/96/000000/fish.png' },
+                { text: 'Horse', image: 'https://img.icons8.com/color/96/000000/horse.png' },
+                { text: 'Cow', image: 'https://img.icons8.com/color/96/000000/cow.png' },
+                { text: 'Sheep', image: 'https://img.icons8.com/color/96/000000/sheep.png' },
+                { text: 'Chicken', image: 'https://img.icons8.com/color/96/000000/chicken.png' },
+                { text: 'Duck', image: 'https://img.icons8.com/color/96/000000/duck.png' },
+                { text: 'Lion', image: 'https://img.icons8.com/color/96/000000/lion.png' },
+                { text: 'Elephant', image: 'https://img.icons8.com/color/96/000000/elephant.png' },
+                { text: 'Monkey', image: 'https://img.icons8.com/color/96/000000/monkey.png' },
+                { text: 'Bear', image: 'https://img.icons8.com/color/96/000000/bear.png' },
+                { text: 'Rabbit', image: 'https://img.icons8.com/color/96/000000/rabbit.png' },
+                { text: 'Turtle', image: 'https://img.icons8.com/color/96/000000/turtle.png' }
              ]},
              { id: 'vehicles', name: 'Vehicles', image: 'https://img.icons8.com/color/96/000000/fiat-500.png', className: 'topic-cell-vehicles', words: [
                 { text: 'Car', image: 'https://img.icons8.com/color/96/000000/fiat-500.png'},
                 { text: 'Bus', image: 'https://img.icons8.com/color/96/000000/bus.png'},
                 { text: 'Train', image: 'https://img.icons8.com/color/96/000000/train.png'},
                 { text: 'Bike', image: 'https://img.icons8.com/color/96/000000/bicycle.png'},
+                { text: 'Truck', image: 'https://img.icons8.com/color/96/000000/truck.png' },
+                { text: 'Boat', image: 'https://img.icons8.com/color/96/000000/sail-boat.png' },
+                { text: 'Plane', image: 'https://img.icons8.com/color/96/000000/airplane.png' },
+                { text: 'Fire Truck', image: 'https://img.icons8.com/color/96/000000/fire-truck.png' },
+                { text: 'Police Car', image: 'https://img.icons8.com/color/96/000000/police-car.png' },
+                { text: 'Ambulance', image: 'https://img.icons8.com/color/96/000000/ambulance.png' },
+                { text: 'Helicopter', image: 'https://img.icons8.com/color/96/000000/helicopter.png' },
+                { text: 'Rocket', image: 'https://img.icons8.com/color/96/000000/rocket.png' }
              ]},
         ];
 
@@ -726,11 +948,16 @@
         const initialAISuggestions = [
             { text: 'I', image: 'https://img.icons8.com/color/96/000000/guest-male.png' },
             { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
-            { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
-            { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
-            { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' },
+            { text: 'Need', image: 'https://img.icons8.com/color/96/000000/goal.png' },
+            { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+            { text: 'Feel', image: 'https://img.icons8.com/color/96/000000/smiling-face-with-heart.png' },
+            { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
             { text: 'Yes', image: 'https://img.icons8.com/color/96/000000/checked-checkbox.png' },
             { text: 'No', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
+            { text: 'Please', image: 'https://img.icons8.com/?size=100&id=utfNVOTLYip9&format=png&color=000000' },
+            { text: 'Thank You', image: 'https://img.icons8.com/color/96/000000/thank-you.png' },
+            { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+            { text: 'Hello', image: 'https://img.icons8.com/color/96/000000/waving-hand.png' }
         ];
         
         // Context-aware word patterns and associations
@@ -742,17 +969,22 @@
                 { text: 'Need', image: 'https://img.icons8.com/color/96/000000/goal.png' },
                 { text: 'Feel', image: 'https://img.icons8.com/color/96/000000/smiling-face-with-heart.png' },
                 { text: 'See', image: 'https://img.icons8.com/color/96/000000/visible.png' },
-                { text: 'Am', image: 'https://img.icons8.com/color/96/000000/questions.png' }
+                { text: 'Am', image: 'https://img.icons8.com/color/96/000000/questions.png' },
+                { text: 'Can', image: 'https://img.icons8.com/color/96/000000/checked--v1.png' },
+                { text: 'Have', image: 'https://img.icons8.com/color/96/000000/property.png' }
             ],
             
             // Words that might follow "want"
             "want": [
                 { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
                 { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
-                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
                 { text: 'To', image: 'https://img.icons8.com/color/96/000000/arrow.png' },
                 { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
-                { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' }
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Home', image: 'https://img.icons8.com/color/96/000000/home.png' },
+                { text: 'Rest', image: 'https://img.icons8.com/color/96/000000/relax.png' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet.png' }
             ],
             
             // Words that might follow "like"
@@ -761,16 +993,22 @@
                 { text: 'Toys', image: 'https://img.icons8.com/color/96/000000/teddy-bear.png' },
                 { text: 'Animals', image: 'https://img.icons8.com/color/96/000000/dog-paw-print.png' },
                 { text: 'Colors', image: 'https://img.icons8.com/color/96/000000/color-palette.png' },
-                { text: 'To', image: 'https://img.icons8.com/color/96/000000/arrow.png' }
+                { text: 'To', image: 'https://img.icons8.com/color/96/000000/arrow.png' },
+                { text: 'Music', image: 'https://img.icons8.com/color/96/000000/musical-notes.png' },
+                { text: 'Books', image: 'https://img.icons8.com/color/96/000000/book.png' },
+                { text: 'Games', image: 'https://img.icons8.com/color/96/000000/controller.png' }
             ],
             
             // Words that might follow "need"
             "need": [
                 { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
                 { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
-                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
-                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet-paper.png' },
-                { text: 'Break', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' }
+                { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet.png' },
+                { text: 'Break', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Medicine', image: 'https://img.icons8.com/color/96/000000/pills.png' },
+                { text: 'Doctor', image: 'https://img.icons8.com/color/96/000000/doctor-male.png' },
+                { text: 'Rest', image: 'https://img.icons8.com/color/96/000000/relax.png' }
             ],
             
             // Words that might follow "eat"
@@ -779,15 +1017,23 @@
                 { text: 'Banana', image: 'https://img.icons8.com/color/96/000000/banana.png' },
                 { text: 'Cookie', image: 'https://img.icons8.com/color/96/000000/cookie.png' },
                 { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
-                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' }
+                { text: 'Pizza', image: 'https://img.icons8.com/color/96/000000/pizza.png' },
+                { text: 'Sandwich', image: 'https://img.icons8.com/color/96/000000/sandwich.png' },
+                { text: 'Chicken', image: 'https://img.icons8.com/color/96/000000/chicken.png' },
+                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+                { text: 'Fruit', image: 'https://img.icons8.com/color/96/000000/group-of-fruits.png' }
             ],
             
             // Words that might follow "drink"
             "drink": [
                 { text: 'Water', image: 'https://img.icons8.com/color/96/000000/water-bottle.png' },
-                { text: 'Juice', image: 'https://img.icons8.com/color/96/000000/juice-box.png' },
+                { text: 'Juice', image: 'https://img.icons8.com/?size=100&id=tZx3c5B2wV4b&format=png&color=000000' },
                 { text: 'Milk', image: 'https://img.icons8.com/color/96/000000/milk-bottle.png' },
-                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' }
+                { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+                { text: 'Soda', image: 'https://img.icons8.com/color/96/000000/cola.png' },
+                { text: 'Coffee', image: 'https://img.icons8.com/color/96/000000/coffee.png' },
+                { text: 'Tea', image: 'https://img.icons8.com/color/96/000000/tea.png' },
+                { text: 'Hot Chocolate', image: 'https://img.icons8.com/color/96/000000/hot-chocolate.png' }
             ],
             
             // Words that might follow "feel"
@@ -795,51 +1041,108 @@
                 { text: 'Happy', image: 'https://img.icons8.com/color/96/000000/happy.png' },
                 { text: 'Sad', image: 'https://img.icons8.com/color/96/000000/sad.png' },
                 { text: 'Tired', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
-                { text: 'Scared', image: 'https://img.icons8.com/color/96/000000/fearful-face.png' },
-                { text: 'Angry', image: 'https://img.icons8.com/color/96/000000/angry-face.png' },
-                { text: 'Excited', image: 'https://img.icons8.com/color/96/000000/partying-face.png' }
+                { text: 'Scared', image: 'https://img.icons8.com/?size=100&id=CZwsXFk4zfGo&format=png&color=000000' },
+                { text: 'Angry', image: 'https://img.icons8.com/?size=100&id=63225&format=png&color=000000' },
+                { text: 'Excited', image: 'https://img.icons8.com/?size=100&id=3sQY8JkktfnK&format=png&color=000000' },
+                { text: 'Sick', image: 'https://img.icons8.com/?size=100&id=doAVsmyCwyCT&format=png&color=000000' },
+                { text: 'Hurt', image: 'https://img.icons8.com/color/96/000000/bandage.png' },
+                { text: 'Confused', image: 'https://img.icons8.com/color/96/000000/confused.png' },
+                { text: 'Better', image: 'https://img.icons8.com/color/96/000000/thumb-up.png' }
+            ],
+            
+            // Words that might follow "go"
+            "go": [
+                { text: 'Home', image: 'https://img.icons8.com/color/96/000000/home.png' },
+                { text: 'School', image: 'https://img.icons8.com/color/96/000000/school-building.png' },
+                { text: 'Outside', image: 'https://img.icons8.com/color/96/000000/forest.png' },
+                { text: 'Park', image: 'https://img.icons8.com/color/96/000000/park-with-street-light.png' },
+                { text: 'Store', image: 'https://img.icons8.com/color/96/000000/shop.png' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet.png' },
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Sleep', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' }
             ],
             
             // Two-word combinations
             "i_want": [
                 { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
-                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
                 { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
                 { text: 'To', image: 'https://img.icons8.com/color/96/000000/arrow.png' },
-                { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' }
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Home', image: 'https://img.icons8.com/color/96/000000/home.png' },
+                { text: 'Rest', image: 'https://img.icons8.com/color/96/000000/relax.png' },
+                { text: 'Medicine', image: 'https://img.icons8.com/color/96/000000/pills.png' }
             ],
             
             "i_need": [
                 { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
-                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet-paper.png' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet.png' },
                 { text: 'Food', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
                 { text: 'Water', image: 'https://img.icons8.com/color/96/000000/water-bottle.png' },
-                { text: 'Break', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' }
+                { text: 'Break', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Medicine', image: 'https://img.icons8.com/color/96/000000/pills.png' },
+                { text: 'Doctor', image: 'https://img.icons8.com/color/96/000000/doctor-male.png' },
+                { text: 'Rest', image: 'https://img.icons8.com/color/96/000000/relax.png' }
             ],
             
             "i_feel": [
                 { text: 'Happy', image: 'https://img.icons8.com/color/96/000000/happy.png' },
                 { text: 'Sad', image: 'https://img.icons8.com/color/96/000000/sad.png' },
                 { text: 'Tired', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
-                { text: 'Sick', image: 'https://img.icons8.com/color/96/000000/temperature.png' },
-                { text: 'Good', image: 'https://img.icons8.com/color/96/000000/thumb-up.png' }
+                { text: 'Sick', image: 'https://img.icons8.com/?size=100&id=doAVsmyCwyCT&format=png&color=000000' },
+                { text: 'Good', image: 'https://img.icons8.com/color/96/000000/thumb-up.png' },
+                { text: 'Pain', image: 'https://img.icons8.com/?size=100&id=v5KIlsRVujYc&format=png&color=000000' },
+                { text: 'Hurt', image: 'https://img.icons8.com/color/96/000000/bandage.png' },
+                { text: 'Scared', image: 'https://img.icons8.com/?size=100&id=CZwsXFk4zfGo&format=png&color=000000' },
+                { text: 'Angry', image: 'https://img.icons8.com/?size=100&id=63225&format=png&color=000000' },
+                { text: 'Confused', image: 'https://img.icons8.com/color/96/000000/confused.png' }
+            ],
+            
+            "i_am": [
+                { text: 'Happy', image: 'https://img.icons8.com/color/96/000000/happy.png' },
+                { text: 'Sad', image: 'https://img.icons8.com/color/96/000000/sad.png' },
+                { text: 'Tired', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Hungry', image: 'https://img.icons8.com/color/96/000000/hamburger.png' },
+                { text: 'Thirsty', image: 'https://img.icons8.com/color/96/000000/water-bottle.png' },
+                { text: 'Ready', image: 'https://img.icons8.com/color/96/000000/checked--v1.png' },
+                { text: 'Sick', image: 'https://img.icons8.com/?size=100&id=doAVsmyCwyCT&format=png&color=000000' },
+                { text: 'Okay', image: 'https://img.icons8.com/color/96/000000/ok.png' }
             ],
             
             "want_to": [
                 { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
-                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
-                { text: 'Play', image: 'https://img.icons8.com/color/96/000000/playing-cards.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
                 { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
-                { text: 'Sleep', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' }
+                { text: 'Sleep', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Draw', image: 'https://img.icons8.com/color/96/000000/drawing.png' },
+                { text: 'Read', image: 'https://img.icons8.com/color/96/000000/reading.png' },
+                { text: 'Watch', image: 'https://img.icons8.com/color/96/000000/tv.png' },
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' }
+            ],
+            
+            "need_to": [
+                { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
+                { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
+                { text: 'Sleep', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Rest', image: 'https://img.icons8.com/color/96/000000/relax.png' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet.png' },
+                { text: 'Doctor', image: 'https://img.icons8.com/color/96/000000/doctor-male.png' },
+                { text: 'Medicine', image: 'https://img.icons8.com/color/96/000000/pills.png' }
             ],
             
             // Category-based patterns
             "food": [
                 { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
-                { text: 'Drink', image: 'https://img.icons8.com/color/96/000000/champagne-glass.png' },
-                { text: 'Please', image: 'https://img.icons8.com/color/96/000000/please.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
+                { text: 'Please', image: 'https://img.icons8.com/?size=100&id=utfNVOTLYip9&format=png&color=000000' },
                 { text: 'Tasty', image: 'https://img.icons8.com/color/96/000000/facebook-like.png' },
-                { text: 'And', image: 'https://img.icons8.com/color/96/000000/plus-2-math.png' }
+                { text: 'And', image: 'https://img.icons8.com/color/96/000000/plus-2-math.png' },
+                { text: 'Hot', image: 'https://img.icons8.com/color/96/000000/temperature-hot.png' },
+                { text: 'Cold', image: 'https://img.icons8.com/color/96/000000/temperature-cold.png' },
+                { text: 'Sweet', image: 'https://img.icons8.com/color/96/000000/cake.png' },
+                { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' }
             ],
             
             "animals": [
@@ -847,18 +1150,145 @@
                 { text: 'See', image: 'https://img.icons8.com/color/96/000000/visible.png' },
                 { text: 'Big', image: 'https://img.icons8.com/color/96/000000/resize.png' },
                 { text: 'Small', image: 'https://img.icons8.com/color/96/000000/resize-four-directions.png' },
-                { text: 'Like', image: 'https://img.icons8.com/color/96/000000/filled-like.png' }
+                { text: 'Like', image: 'https://img.icons8.com/color/96/000000/filled-like.png' },
+                { text: 'Cute', image: 'https://img.icons8.com/color/96/000000/cute.png' },
+                { text: 'Feed', image: 'https://img.icons8.com/color/96/000000/dog-bowl.png' },
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Loud', image: 'https://img.icons8.com/color/96/000000/high-volume.png' }
+            ],
+            
+            "colors": [
+                { text: 'Like', image: 'https://img.icons8.com/color/96/000000/filled-like.png' },
+                { text: 'Pretty', image: 'https://img.icons8.com/color/96/000000/diamond-heart.png' },
+                { text: 'Favorite', image: 'https://img.icons8.com/color/96/000000/star.png' },
+                { text: 'Paint', image: 'https://img.icons8.com/color/96/000000/paint.png' },
+                { text: 'Bright', image: 'https://img.icons8.com/color/96/000000/sun.png' },
+                { text: 'Dark', image: 'https://img.icons8.com/color/96/000000/night.png' }
+            ],
+            
+            "toys": [
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
+                { text: 'Share', image: 'https://img.icons8.com/color/96/000000/share.png' },
+                { text: 'Mine', image: 'https://img.icons8.com/color/96/000000/hand-pointing.png' },
+                { text: 'Yours', image: 'https://img.icons8.com/color/96/000000/pointing-at-self.png' },
+                { text: 'Fun', image: 'https://img.icons8.com/color/96/000000/happy.png' }
+            ],
+            
+            "places": [
+                { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
+                { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
+                { text: 'Visit', image: 'https://img.icons8.com/color/96/000000/visit.png' },
+                { text: 'Leave', image: 'https://img.icons8.com/color/96/000000/exit.png' },
+                { text: 'Stay', image: 'https://img.icons8.com/color/96/000000/anchor.png' },
+                { text: 'Far', image: 'https://img.icons8.com/color/96/000000/map-marker.png' },
+                { text: 'Near', image: 'https://img.icons8.com/color/96/000000/near-me.png' }
+            ],
+            
+            "health": [
+                { text: 'Feel', image: 'https://img.icons8.com/color/96/000000/smiling-face-with-heart.png' },
+                { text: 'Pain', image: 'https://img.icons8.com/?size=100&id=v5KIlsRVujYc&format=png&color=000000' },
+                { text: 'Better', image: 'https://img.icons8.com/color/96/000000/thumb-up.png' },
+                { text: 'Worse', image: 'https://img.icons8.com/color/96/000000/thumbs-down.png' },
+                { text: 'Medicine', image: 'https://img.icons8.com/color/96/000000/pills.png' },
+                { text: 'Need', image: 'https://img.icons8.com/color/96/000000/goal.png' },
+                { text: 'Doctor', image: 'https://img.icons8.com/color/96/000000/doctor-male.png' },
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' }
+            ],
+            
+            "weather": [
+                { text: 'Today', image: 'https://img.icons8.com/color/96/000000/today.png' },
+                { text: 'Outside', image: 'https://img.icons8.com/color/96/000000/forest.png' },
+                { text: 'Hot', image: 'https://img.icons8.com/color/96/000000/temperature-hot.png' },
+                { text: 'Cold', image: 'https://img.icons8.com/color/96/000000/temperature-cold.png' },
+                { text: 'Wear', image: 'https://img.icons8.com/color/96/000000/clothes.png' },
+                { text: 'Rain', image: 'https://img.icons8.com/color/96/000000/umbrella.png' }
+            ],
+            
+            "activities": [
+                { text: 'Let\'s', image: 'https://img.icons8.com/color/96/000000/crowd.png' },
+                { text: 'I want to', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
+                { text: 'Fun', image: 'https://img.icons8.com/color/96/000000/happy.png' },
+                { text: 'Together', image: 'https://img.icons8.com/color/96/000000/handshake.png' },
+                { text: 'Alone', image: 'https://img.icons8.com/color/96/000000/person.png' },
+                { text: 'Later', image: 'https://img.icons8.com/color/96/000000/sand-watch.png' },
+                { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' }
+            ],
+            
+            // Three-word combinations
+            "i_want_to": [
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
+                { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
+                { text: 'Sleep', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+                { text: 'Rest', image: 'https://img.icons8.com/color/96/000000/relax.png' },
+                { text: 'Read', image: 'https://img.icons8.com/color/96/000000/reading.png' },
+                { text: 'Draw', image: 'https://img.icons8.com/color/96/000000/drawing.png' },
+                { text: 'Talk', image: 'https://img.icons8.com/color/96/000000/microphone.png' }
+            ],
+            
+            "i_need_to": [
+                { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
+                { text: 'Eat', image: 'https://img.icons8.com/color/96/000000/restaurant.png' },
+                { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
+                { text: 'Bathroom', image: 'https://img.icons8.com/color/96/000000/toilet.png' },
+                { text: 'Sleep', image: 'https://img.icons8.com/color/96/000000/sleeping-in-bed.png' },
+                { text: 'Rest', image: 'https://img.icons8.com/color/96/000000/relax.png' }
+            ],
+            
+            "i_feel_pain": [
+                { text: 'Head', image: 'https://img.icons8.com/color/96/000000/head-profile.png' },
+                { text: 'Stomach', image: 'https://img.icons8.com/color/96/000000/stomach.png' },
+                { text: 'Back', image: 'https://img.icons8.com/color/96/000000/back-pain.png' },
+                { text: 'Leg', image: 'https://img.icons8.com/color/96/000000/leg.png' },
+                { text: 'Arm', image: 'https://img.icons8.com/color/96/000000/arm.png' },
+                { text: 'Throat', image: 'https://img.icons8.com/color/96/000000/throat.png' }
+            ],
+            
+            "i_like_to": [
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Draw', image: 'https://img.icons8.com/color/96/000000/drawing.png' },
+                { text: 'Read', image: 'https://img.icons8.com/color/96/000000/reading.png' },
+                { text: 'Sing', image: 'https://img.icons8.com/color/96/000000/micro.png' },
+                { text: 'Dance', image: 'https://img.icons8.com/color/96/000000/dancing.png' },
+                { text: 'Write', image: 'https://img.icons8.com/color/96/000000/writing-implement.png' }
+            ],
+            
+            "let's_go": [
+                { text: 'Home', image: 'https://img.icons8.com/color/96/000000/home.png' },
+                { text: 'Outside', image: 'https://img.icons8.com/color/96/000000/forest.png' },
+                { text: 'Park', image: 'https://img.icons8.com/color/96/000000/park-with-street-light.png' },
+                { text: 'School', image: 'https://img.icons8.com/color/96/000000/school-building.png' },
+                { text: 'Store', image: 'https://img.icons8.com/color/96/000000/shop.png' },
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' }
+            ],
+            
+            "can_i": [
+                { text: 'Have', image: 'https://img.icons8.com/color/96/000000/property.png' },
+                { text: 'Play', image: 'https://img.icons8.com/?size=100&id=bMIi5SFvG3p2&format=png&color=000000' },
+                { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
+                { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+                { text: 'Get', image: 'https://img.icons8.com/color/96/000000/hand.png' },
+                { text: 'See', image: 'https://img.icons8.com/color/96/000000/visible.png' }
             ],
         };
         
         // Default suggestions when context doesn't match specific patterns
         const defaultAISuggestions = [
+            { text: 'I', image: 'https://img.icons8.com/color/96/000000/guest-male.png' },
             { text: 'Want', image: 'https://img.icons8.com/color/96/000000/wish-list.png' },
+            { text: 'Need', image: 'https://img.icons8.com/color/96/000000/goal.png' },
+            { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
             { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
             { text: 'Like', image: 'https://img.icons8.com/color/96/000000/filled-like.png' },
             { text: 'Not', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
             { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
-            { text: 'Please', image: 'https://img.icons8.com/color/96/000000/please.png' }
+            { text: 'Yes', image: 'https://img.icons8.com/color/96/000000/checked-checkbox.png' },
+            { text: 'No', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
+            { text: 'Please', image: 'https://img.icons8.com/?size=100&id=utfNVOTLYip9&format=png&color=000000' },
+            { text: 'Thank You', image: 'https://img.icons8.com/color/96/000000/thank-you.png' }
         ];
 
         // --- FUNCTIONS ---
@@ -1060,13 +1490,26 @@
             const currentWords = currentSentence.map(item => item.text.toLowerCase());
             const lastWord = currentWords[currentWords.length - 1];
             
-            // Check for two-word combinations first (more specific context)
+            // Check for three-word combinations first (most specific context)
+            if (currentSentence.length >= 3) {
+                const lastThreeWords = `${currentWords[currentWords.length - 3]}_${currentWords[currentWords.length - 2]}_${lastWord}`;
+                
+                // Check if we have specific suggestions for this three-word combo
+                if (contextPatterns[lastThreeWords]) {
+                    aiSuggestionLabel.textContent = `After "${currentWords[currentWords.length - 3]} ${currentWords[currentWords.length - 2]} ${lastWord}", try...`;
+                    aiSuggestionLabel.classList.add('ai-badge-active');
+                    return contextPatterns[lastThreeWords];
+                }
+            }
+            
+            // Check for two-word combinations (more specific context than single words)
             if (currentSentence.length >= 2) {
                 const lastTwoWords = `${currentWords[currentWords.length - 2]}_${lastWord}`;
                 
                 // Check if we have specific suggestions for this two-word combo
                 if (contextPatterns[lastTwoWords]) {
                     aiSuggestionLabel.textContent = `After "${currentWords[currentWords.length - 2]} ${lastWord}", try...`;
+                    aiSuggestionLabel.classList.add('ai-badge-active');
                     return contextPatterns[lastTwoWords];
                 }
             }
@@ -1101,9 +1544,7 @@
             // If no specific context is matched, return default suggestions
             aiSuggestionLabel.textContent = "You might want to say...";
             return defaultAISuggestions;
-        }
-        
-        function checkForCategoryMatches(word) {
+        }            function checkForCategoryMatches(word) {
             // Check if the word belongs to a specific category by looking at 
             // the mockTopics structure and return corresponding suggestions
             
@@ -1127,7 +1568,9 @@
                                     { text: 'When', image: 'https://img.icons8.com/color/96/000000/tear-off-calendar.png' },
                                     { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' },
                                     { text: 'Very', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
-                                    { text: 'Not', image: 'https://img.icons8.com/color/96/000000/cancel.png' }
+                                    { text: 'Not', image: 'https://img.icons8.com/color/96/000000/cancel.png' },
+                                    { text: 'Better', image: 'https://img.icons8.com/color/96/000000/thumb-up.png' },
+                                    { text: 'Today', image: 'https://img.icons8.com/color/96/000000/today.png' }
                                 ];
                             case 'actions':
                                 // If last word was an action, suggest objects for the action
@@ -1136,7 +1579,36 @@
                                     { text: 'Toys', image: 'https://img.icons8.com/color/96/000000/teddy-bear.png' },
                                     { text: 'Outside', image: 'https://img.icons8.com/color/96/000000/forest.png' },
                                     { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
-                                    { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' }
+                                    { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' },
+                                    { text: 'Together', image: 'https://img.icons8.com/color/96/000000/conference-call.png' },
+                                    { text: 'Please', image: 'https://img.icons8.com/?size=100&id=utfNVOTLYip9&format=png&color=000000' }
+                                ];
+                            case 'health':
+                                // If last word was health-related
+                                return [
+                                    { text: 'Doctor', image: 'https://img.icons8.com/color/96/000000/doctor-male.png' },
+                                    { text: 'Medicine', image: 'https://img.icons8.com/color/96/000000/pills.png' },
+                                    { text: 'Help', image: 'https://img.icons8.com/color/96/000000/help.png' },
+                                    { text: 'Better', image: 'https://img.icons8.com/color/96/000000/thumb-up.png' },
+                                    { text: 'Rest', image: 'https://img.icons8.com/color/96/000000/relax.png' }
+                                ];
+                            case 'food':
+                                // If last word was food-related
+                                return [
+                                    { text: 'More', image: 'https://img.icons8.com/color/96/000000/plus-math.png' },
+                                    { text: 'Please', image: 'https://img.icons8.com/?size=100&id=utfNVOTLYip9&format=png&color=000000' },
+                                    { text: 'Drink', image: 'https://img.icons8.com/?size=100&id=40260&format=png&color=000000' },
+                                    { text: 'And', image: 'https://img.icons8.com/color/96/000000/plus-2-math.png' },
+                                    { text: 'Finished', image: 'https://img.icons8.com/color/96/000000/checked-2.png' }
+                                ];
+                            case 'places':
+                                // If last word was place-related
+                                return [
+                                    { text: 'Go', image: 'https://img.icons8.com/color/96/000000/go.png' },
+                                    { text: 'Now', image: 'https://img.icons8.com/color/96/000000/future.png' },
+                                    { text: 'Later', image: 'https://img.icons8.com/color/96/000000/sand-watch.png' },
+                                    { text: 'With', image: 'https://img.icons8.com/color/96/000000/handshake.png' },
+                                    { text: 'Like', image: 'https://img.icons8.com/color/96/000000/filled-like.png' }
                                 ];
                         }
                     }
@@ -1193,29 +1665,109 @@
                 const currentWords = currentSentence.map(item => item.text.toLowerCase());
                 const lastWordObj = currentSentence[currentSentence.length - 1];
                 
-                // Create intelligent sentence completions based on current words
-                if (currentWords.includes('cookie')) {
-                    // If cookie is mentioned, suggest "I want a cookie"
-                    suggestedSentence = "I want a cookie.";
-                } else if (currentWords.includes('apple')) {
-                    suggestedSentence = "I want to eat an apple.";
-                } else if (currentWords.includes('water') || currentWords.includes('juice')) {
-                    const drink = currentWords.includes('water') ? 'water' : 'juice';
-                    suggestedSentence = `I want to drink some ${drink}, please.`;
-                } else if (lastWordObj.text.toLowerCase() === 'i') {
-                    suggestedSentence = "I want something.";
+                // Create intelligent sentence completions based on current words and context patterns
+                
+                // Food-related completions
+                if (currentWords.includes('cookie') || currentWords.includes('apple') || 
+                   currentWords.includes('banana') || currentWords.includes('pizza') || 
+                   currentWords.includes('sandwich')) {
+                    const foodItem = currentWords.find(word => 
+                       ['cookie', 'apple', 'banana', 'pizza', 'sandwich'].includes(word));
+                    if (currentWords.includes('want')) {
+                        suggestedSentence = `I want ${foodItem === 'apple' || foodItem === 'banana' ? 'an' : 'a'} ${foodItem}, please.`;
+                    } else if (currentWords.includes('eat')) {
+                        suggestedSentence = `I want to eat ${foodItem === 'apple' || foodItem === 'banana' ? 'an' : 'a'} ${foodItem}, please.`;
+                    } else {
+                        suggestedSentence = `I would like ${foodItem === 'apple' || foodItem === 'banana' ? 'an' : 'a'} ${foodItem}, please.`;
+                    }
+                }
+                // Drink-related completions
+                else if (currentWords.includes('water') || currentWords.includes('juice') || 
+                        currentWords.includes('milk') || currentWords.includes('soda')) {
+                    const drink = currentWords.find(word => 
+                       ['water', 'juice', 'milk', 'soda'].includes(word));
+                    if (currentWords.includes('want')) {
+                        suggestedSentence = `I want some ${drink}, please.`;
+                    } else if (currentWords.includes('drink')) {
+                        suggestedSentence = `I would like to drink some ${drink}, please.`;
+                    } else {
+                        suggestedSentence = `May I have some ${drink}, please?`;
+                    }
+                }
+                // Help-related completions
+                else if (currentWords.includes('help')) {
+                    if (currentWords.includes('need')) {
+                        suggestedSentence = "I need help, please.";
+                    } else if (currentWords.length >= 3 && currentWords.includes('can') && currentWords.includes('you')) {
+                        suggestedSentence = "Can you help me, please?";
+                    } else {
+                        suggestedSentence = "I need help with this, please.";
+                    }
+                }
+                // Feel-related completions
+                else if (currentWords.includes('feel')) {
+                    const feelings = ['happy', 'sad', 'tired', 'sick', 'excited', 'angry', 'scared', 'confused'];
+                    const foundFeeling = currentWords.find(word => feelings.includes(word));
+                    
+                    if (foundFeeling) {
+                        suggestedSentence = `I feel ${foundFeeling} today.`;
+                    } else {
+                        suggestedSentence = "I'm not feeling well today.";
+                    }
+                }
+                // Go-related completions
+                else if (currentWords.includes('go')) {
+                    const places = ['home', 'school', 'bathroom', 'outside', 'park', 'store'];
+                    const foundPlace = currentWords.find(word => places.includes(word));
+                    
+                    if (foundPlace) {
+                        if (currentWords.includes('want')) {
+                            suggestedSentence = `I want to go to the ${foundPlace}.`;
+                        } else {
+                            suggestedSentence = `Can we go to the ${foundPlace}, please?`;
+                        }
+                    } else {
+                        suggestedSentence = "I want to go somewhere.";
+                    }
+                }
+                // Trường hợp đặc biệt: play + outside + together (theo bất kỳ thứ tự nào)
+                else if (currentWords.includes('play') && currentWords.includes('outside') && currentWords.includes('together')) {
+                    suggestedSentence = "Let's play outside together at the park!";
+                }
+                // Activity-related completions
+                else if (currentWords.includes('play') || currentWords.includes('read') || 
+                        currentWords.includes('draw') || currentWords.includes('write')) {
+                    const activity = currentWords.find(word => 
+                       ['play', 'read', 'draw', 'write'].includes(word));
+                    
+                    if (currentWords.includes('want')) {
+                        suggestedSentence = `I want to ${activity} now.`;
+                    } else {
+                        suggestedSentence = `Can I ${activity} now, please?`;
+                    }
+                }
+                // Basic communication starters
+                else if (lastWordObj.text.toLowerCase() === 'i') {
+                    suggestedSentence = "I need something, please.";
                 } else if (lastWordObj.text.toLowerCase() === 'want') {
-                    suggestedSentence = "I want help please.";
-                } else if (lastWordObj.text.toLowerCase() === 'eat') {
-                    suggestedSentence = "I want to eat something.";
-                } else if (currentWords.includes('help')) {
-                    suggestedSentence = "I need help please.";
+                    suggestedSentence = "I want something, please.";
+                } else if (lastWordObj.text.toLowerCase() === 'can') {
+                    suggestedSentence = "Can I have that, please?";
                 } else {
                     // Fall back to just combining the words they've entered with some grammar fixes
                     suggestedSentence = currentSentence.map(item => item.text).join(' ');
-                    // Add a period at the end if there isn't one
-                    if (!suggestedSentence.endsWith('.')) {
+                    
+                    // Basic grammar improvements
+                    if (!suggestedSentence.endsWith('.') && !suggestedSentence.endsWith('?')) {
                         suggestedSentence += '.';
+                    }
+                    
+                    // Add "please" if it's likely a request and doesn't already have it
+                    if ((suggestedSentence.toLowerCase().includes('want') || 
+                        suggestedSentence.toLowerCase().includes('need') ||
+                        suggestedSentence.toLowerCase().includes('can i')) && 
+                        !suggestedSentence.toLowerCase().includes('please')) {
+                        suggestedSentence = suggestedSentence.replace('.', ', please.');
                     }
                     
                     // Capitalize first letter

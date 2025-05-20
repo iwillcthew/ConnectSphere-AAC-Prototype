@@ -361,12 +361,12 @@
                 localStorage.setItem('aiImage_prompt', prompt);
                 localStorage.setItem('aiImage_style', selectedAiStyle);
 
-                // Simulate some generated image URLs (replace with actual results later)
+                // Luôn sử dụng 4 ảnh thực từ thư mục image thay vì placeholder
                 const simulatedImageUrls = [
-                    `https://via.placeholder.com/400x400/FFC0CB/000000?Text=AI_Img1_${selectedAiStyle}`,
-                    `https://via.placeholder.com/400x400/ADD8E6/000000?Text=AI_Img2_${selectedAiStyle}`,
-                    `https://via.placeholder.com/400x400/90EE90/000000?Text=AI_Img3_${selectedAiStyle}`,
-                    `https://via.placeholder.com/400x400/FFFFE0/000000?Text=AI_Img4_${selectedAiStyle}`
+                    'image/image1.jpg',
+                    'image/image2.jpg',
+                    'image/image3.jpg',
+                    'image/image4.jpg'
                 ];
                 localStorage.setItem('aiImage_generatedUrls', JSON.stringify(simulatedImageUrls));
 

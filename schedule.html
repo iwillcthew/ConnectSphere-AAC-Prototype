@@ -22,6 +22,8 @@
             --aac-button-schedule-item-done-bg: #D3D3D3; /* Light Grey for done items */
             --aac-button-schedule-item-done-text: #708090; /* Slate Grey for done text */
             --aac-header-bg: var(--aac-primary-bg); /* Background for the schedule header */
+            --aac-current-activity-bg: #FFFF99; /* Light yellow for current activity */
+            --aac-current-activity-border: #FFD700; /* Gold for current activity border */
         }
 
         body, html {
@@ -102,7 +104,8 @@
             padding: var(--aac-cell-padding);
             margin-bottom: var(--aac-cell-gap);
             box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-            transition: background-color 0.3s ease, opacity 0.3s ease;
+            transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+            position: relative; /* For positioning the current badge */
         }
 
         .schedule-item.item-done {
@@ -116,6 +119,36 @@
             color: var(--aac-button-schedule-item-done-text);
         }
 
+        .schedule-item.current-activity {
+            background-color: var(--aac-current-activity-bg);
+            border: 3px solid var(--aac-current-activity-border);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            animation: pulsate 2s infinite;
+        }
+
+        @keyframes pulsate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .schedule-item.current-activity .item-text {
+            font-weight: bolder;
+            color: #CC8400; /* Darker gold-like color for text */
+        }
+
+        .schedule-item.current-activity::before {
+            content: "⏰ Current";
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--aac-current-activity-border);
+            color: #8B0000; /* Dark red for contrast */
+            padding: 2px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
 
         .item-icon {
             width: 70px; /* Larger icons for schedule items */
@@ -198,7 +231,7 @@
 </head>
 <body>
     <!-- This div would be displayed when navigating to the schedule -->
-    <div id="scheduleScreen" class="tablet-container-aac" style="display: flex;"> {/* Set to flex to test, change to none later */}
+    <div id="scheduleScreen" class="tablet-container-aac" style="display: flex;"> 
         <header class="schedule-header">
             <h1>
                 <span class="icon-placeholder" role="img" aria-label="Schedule Icon">🗓️</span>
@@ -262,7 +295,7 @@
                 { id: 'td1', text: 'Wake Up & Get Dressed', time: '7:00 AM', icon: 'https://img.icons8.com/color/96/000000/sunrise.png', done: false },
                 { id: 'td2', text: 'Breakfast Time', time: '7:30 AM', icon: 'https://img.icons8.com/color/96/000000/kawaii-egg.png', done: false },
                 { id: 'td3', text: 'Brush Teeth', time: '8:00 AM', icon: 'https://img.icons8.com/color/96/000000/toothbrush.png', done: false },
-                { id: 'td4', text: 'Go to School / Therapy', time: '8:30 AM', icon: 'https://img.icons8.com/color/96/000000/school-bus.png', done: false },
+                { id: 'td4', text: 'Go to School', time: '8:30 AM', icon: 'https://img.icons8.com/?size=100&id=RWH5eUW9Vr7f&format=png&color=000000', done: false },
                 { id: 'td5', text: 'Play Time', time: '4:00 PM', icon: 'https://img.icons8.com/color/96/000000/playground.png', done: false },
                 { id: 'td6', text: 'Dinner', time: '6:00 PM', icon: 'https://img.icons8.com/color/96/000000/ spaghetti.png', done: false },
                 { id: 'td7', text: 'Read a Book', time: '7:30 PM', icon: 'https://img.icons8.com/color/96/000000/book-shelf.png', done: false },
@@ -310,12 +343,21 @@
                 return;
             }
 
+            // For demo purposes - choose which activity to highlight as "current"
+            // In a real application, this would come from getCurrentActivity with real-time logic
+            const currentActivityId = getCurrentActivity(scheduleForDay);
+
             scheduleForDay.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('schedule-item');
                 itemDiv.dataset.id = item.id;
                 if (item.done) {
                     itemDiv.classList.add('item-done');
+                }
+                
+                // Highlight the current activity (for demo purposes)
+                if (item.id === currentActivityId && !item.done && formatDate(dateToRender) === formatDate(new Date())) {
+                    itemDiv.classList.add('current-activity');
                 }
 
                 const iconImg = document.createElement('img');
@@ -374,6 +416,20 @@
 
             todayBtn.classList.toggle('active-day', currentFormatted === todayFormatted);
             // You can add more complex logic for prev/next if needed (e.g., disabling if no data)
+        }
+        
+        // This function would determine which activity is current based on the actual time
+        // For demo purposes, we're hardcoding the current activity in renderSchedule
+        function getCurrentActivity(scheduleItems) {
+            if (!scheduleItems || scheduleItems.length === 0) return null;
+            
+            // In a real application:
+            // 1. Get the current time
+            // 2. Compare with each activity's scheduled time
+            // 3. Return the one that is closest to current time or ongoing
+            
+            // For now it just returns a fixed activity ID
+            return 'td5'; // Play Time (in a real app, this would be calculated)
         }
 
 
